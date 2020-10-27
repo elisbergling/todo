@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/all.dart';
 import 'package:todo/constants/colors.dart';
@@ -12,77 +11,86 @@ import 'package:todo/widgets/filter_button.dart';
 import 'package:todo/widgets/todo_item.dart';
 
 class HomeScreen extends HookWidget {
-  List<Todo> func(List<Todo> t, StateController<TodoFilter> todoFilter) {
-    switch (todoFilter.state) {
-      case TodoFilter.done:
-        return t.where((todo) => todo.isDone).toList();
-      case TodoFilter.notDone:
-        return t.where((todo) => !todo.isDone).toList();
-      case TodoFilter.all:
-      default:
-        return t;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final todos = useProvider(hiveTodosProvider);
     final todoFilter = useProvider(todoFilterProvider);
-    return Scaffold(
-      backgroundColor: DARKEST,
-      appBar: AppBar(
-        backgroundColor: RED,
-        elevation: 0,
-        title: Text('Home'),
-        leading: IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => AddTodoScreen(
-                isNew: true,
-                todo: null,
-                i: null,
+    final searchContoller = useProvider(searchContollerProvider);
+    final todosListenable =
+        useValueListenable(todos.getTodos().listenable()).values.toList();
+    final sortedTodos =
+        useProvider(sortedTodosProvider(todosListenable)).toList();
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Home'),
+          leading: IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => AddTodoScreen(
+                  isNew: true,
+                  todo: null,
+                ),
               ),
             ),
           ),
         ),
-      ),
-      body: Stack(
-        children: [
-          ValueListenableBuilder(
-            valueListenable: todos.getTodos().listenable(),
-            builder: (context, Box<Todo> tB, _) {
-              final t = func(tB.values.toList(), todoFilter);
-              return ListView.builder(
-                itemBuilder: (context, i) {
-                  Todo todo = t[i];
-                  return TodoItem(todo: todo, i: i);
-                },
-                itemCount: t.length,
-              );
-            },
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FilterButton(
-                todoFilter: todoFilter,
-                todoFilterEnum: TodoFilter.all,
-                text: 'All',
-              ),
-              FilterButton(
-                todoFilter: todoFilter,
-                todoFilterEnum: TodoFilter.notDone,
-                text: 'Active',
-              ),
-              FilterButton(
-                todoFilter: todoFilter,
-                todoFilterEnum: TodoFilter.done,
-                text: 'Completed',
-              ),
-            ],
-          ),
-        ],
+        body: Stack(
+          children: [
+            ListView.builder(
+              itemBuilder: (context, i) {
+                Todo todo = sortedTodos[i];
+                return TodoItem(todo: todo, i: i);
+              },
+              itemCount: sortedTodos.length,
+            ),
+            Column(
+              children: [
+                Container(
+                  color: DARKEST,
+                  margin: const EdgeInsets.only(
+                    top: 10,
+                    right: 10,
+                    left: 10,
+                  ),
+                  child: TextField(
+                    onChanged: (v) => searchContoller.state = v,
+                    maxLines: 1,
+                    minLines: 1,
+                    cursorColor: RED,
+                    style: TextStyle(
+                      color: WHITE,
+                      fontSize: 20,
+                    ),
+                    decoration: InputDecoration(labelText: 'Search'),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FilterButton(
+                      todoFilter: todoFilter,
+                      todoFilterEnum: TodoFilter.all,
+                      text: 'All',
+                    ),
+                    FilterButton(
+                      todoFilter: todoFilter,
+                      todoFilterEnum: TodoFilter.notDone,
+                      text: 'Active',
+                    ),
+                    FilterButton(
+                      todoFilter: todoFilter,
+                      todoFilterEnum: TodoFilter.done,
+                      text: 'Completed',
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

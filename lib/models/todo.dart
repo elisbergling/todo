@@ -10,10 +10,13 @@ class Todo {
   final String description;
   @HiveField(2)
   final bool isDone;
+  @HiveField(3)
+  final String id;
 
   Todo({
     this.title,
     this.description,
     this.isDone,
+    this.id,
   });
 }

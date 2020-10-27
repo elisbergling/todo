@@ -18,26 +18,26 @@ class TodoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: ValueKey(todo.id),
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => AddTodoScreen(
             isNew: false,
             todo: todo,
-            i: i,
           ),
         ),
       ),
       child: Container(
         margin: i == 0
-            ? const EdgeInsets.only(top: 80, bottom: 10, left: 10, right: 10)
+            ? const EdgeInsets.only(top: 145, bottom: 10, left: 10, right: 10)
             : const EdgeInsets.all(10),
         decoration: BoxDecoration(
             color: DARKER,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(3),
             boxShadow: [
               BoxShadow(
                 color: RED,
-                spreadRadius: 3,
+                spreadRadius: 1,
                 blurRadius: 0,
               ),
             ]),
@@ -53,24 +53,29 @@ class TodoItem extends StatelessWidget {
                   value: todo.isDone,
                   onChanged: (_) => context
                       .read(hiveTodosProvider)
-                      .toogleIsDoneTodo(i: i, todo: todo),
+                      .toogleIsDoneTodo(todo: todo),
                 ),
-                Text(
-                  todo.title,
-                  style: TextStyle(color: WHITE, fontSize: 20),
+                Container(
+                  width: 270,
+                  child: Text(
+                    todo.title,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: WHITE, fontSize: 20),
+                  ),
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                todo.description,
-                style: TextStyle(
-                  color: WHITE,
-                  fontSize: 14,
+            if (todo.description != '')
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  todo.description,
+                  style: TextStyle(
+                    color: WHITE,
+                    fontSize: 14,
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

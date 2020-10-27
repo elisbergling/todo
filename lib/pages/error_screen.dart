@@ -9,9 +9,7 @@ class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: DARKEST,
       appBar: AppBar(
-        backgroundColor: RED,
         title: Text('Error'),
       ),
       body: SingleChildScrollView(

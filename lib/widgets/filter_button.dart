@@ -21,27 +21,17 @@ class FilterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => todoFilter.state = todoFilterEnum,
-      child: Container(
-        margin: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-            color: DARKEST,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: textColorForBorder(),
-                spreadRadius: 2,
-                blurRadius: 0,
-              ),
-            ]),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: WHITE, fontSize: 16),
-          ),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      child: OutlineButton(
+        onPressed: () => todoFilter.state = todoFilterEnum,
+        color: DARKEST,
+        borderSide: BorderSide(color: textColorForBorder()),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: WHITE, fontSize: 16),
         ),
       ),
     );

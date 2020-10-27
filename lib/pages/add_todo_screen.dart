@@ -7,9 +7,8 @@ import 'package:todo/providers/providers.dart';
 
 class AddTodoScreen extends HookWidget {
   final Todo todo;
-  final int i;
   final bool isNew;
-  AddTodoScreen({this.todo, this.isNew, this.i});
+  AddTodoScreen({this.todo, this.isNew});
   @override
   Widget build(BuildContext context) {
     final titleTextEditingContorller =
@@ -19,10 +18,8 @@ class AddTodoScreen extends HookWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: DARKEST,
+        //backgroundColor: DARKEST,
         appBar: AppBar(
-          elevation: 0,
-          backgroundColor: RED,
           leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -30,23 +27,22 @@ class AddTodoScreen extends HookWidget {
                   title: titleTextEditingContorller.text.trim(),
                   description: descriptionTextEditingContorller.text.trim(),
                   isDone: isNew ? false : todo.isDone,
+                  id: isNew ? '' : todo.id,
                 );
-                isNew
-                    ? context.read(hiveTodosProvider).createTodo(todo: newTodo)
-                    : context
-                        .read(hiveTodosProvider)
-                        .updateTodo(i: i, todo: newTodo);
+                context
+                    .read(hiveTodosProvider)
+                    .makeTodo(todo: newTodo, isNew: isNew);
                 Navigator.of(context).pop();
               }),
           title: Text('Add a Todo'),
           actions: [
-            if (!isNew)
-              IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    context.read(hiveTodosProvider).deleteTodo(i: i);
-                    Navigator.of(context).pop();
-                  })
+            IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  if (!isNew)
+                    context.read(hiveTodosProvider).deleteTodo(id: todo.id);
+                  Navigator.of(context).pop();
+                })
           ],
         ),
         body: SingleChildScrollView(
@@ -58,7 +54,7 @@ class AddTodoScreen extends HookWidget {
                 child: TextField(
                   controller: titleTextEditingContorller,
                   maxLength: 30,
-                  maxLines: 2,
+                  maxLines: 1,
                   minLines: 1,
                   cursorColor: RED,
                   style: TextStyle(
@@ -66,21 +62,7 @@ class AddTodoScreen extends HookWidget {
                     fontSize: 24,
                   ),
                   decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: RED),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: WHITE),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: ERROR_COLOR),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: ERROR_COLOR),
-                    ),
                     labelText: 'Title',
-                    labelStyle: TextStyle(color: WHITE),
-                    helperStyle: TextStyle(color: WHITE),
                   ),
                 ),
               ),
@@ -95,28 +77,13 @@ class AddTodoScreen extends HookWidget {
                   maxLength: 3000,
                   maxLines: 18,
                   minLines: 1,
-                  scrollPhysics: PageScrollPhysics(),
                   cursorColor: RED,
                   style: TextStyle(
                     color: WHITE,
                     fontSize: 16,
                   ),
                   decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: RED),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: WHITE),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: ERROR_COLOR),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: ERROR_COLOR),
-                    ),
                     labelText: 'Description',
-                    labelStyle: TextStyle(color: WHITE),
-                    helperStyle: TextStyle(color: WHITE),
                   ),
                 ),
               ),
