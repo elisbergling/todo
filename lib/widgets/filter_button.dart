@@ -22,12 +22,14 @@ class FilterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10.5),
+      height: 40,
+      decoration:
+          BoxDecoration(color: DARKEST, borderRadius: BorderRadius.circular(5)),
       child: OutlineButton(
         onPressed: () => todoFilter.state = todoFilterEnum,
-        color: DARKEST,
         borderSide: BorderSide(color: textColorForBorder()),
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+        visualDensity: VisualDensity.standard,
         child: Text(
           text,
           textAlign: TextAlign.center,

@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(
           color: RED,
           elevation: 0,
+          centerTitle: true,
         ),
         inputDecorationTheme: InputDecorationTheme(
           focusedBorder: OutlineInputBorder(

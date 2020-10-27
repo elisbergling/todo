@@ -46,11 +46,10 @@ class AddTodoScreen extends HookWidget {
           ],
         ),
         body: SingleChildScrollView(
-          clipBehavior: Clip.hardEdge,
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(10),
                 child: TextField(
                   controller: titleTextEditingContorller,
                   maxLength: 30,
@@ -68,9 +67,9 @@ class AddTodoScreen extends HookWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                  bottom: 20,
-                  left: 20,
-                  right: 20,
+                  bottom: 10,
+                  left: 10,
+                  right: 10,
                 ),
                 child: TextField(
                   controller: descriptionTextEditingContorller,

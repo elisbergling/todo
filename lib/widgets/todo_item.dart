@@ -29,11 +29,11 @@ class TodoItem extends StatelessWidget {
       ),
       child: Container(
         margin: i == 0
-            ? const EdgeInsets.only(top: 145, bottom: 10, left: 10, right: 10)
-            : const EdgeInsets.all(10),
+            ? const EdgeInsets.only(top: 145, bottom: 9, left: 11, right: 11)
+            : const EdgeInsets.symmetric(vertical: 9, horizontal: 11),
         decoration: BoxDecoration(
             color: DARKER,
-            borderRadius: BorderRadius.circular(3),
+            borderRadius: BorderRadius.circular(5),
             boxShadow: [
               BoxShadow(
                 color: RED,

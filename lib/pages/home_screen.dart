@@ -24,7 +24,7 @@ class HomeScreen extends HookWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Home'),
+          title: Text('Your Todos'),
           leading: IconButton(
             icon: Icon(Icons.add),
             onPressed: () => Navigator.of(context).push(
@@ -49,12 +49,13 @@ class HomeScreen extends HookWidget {
             Column(
               children: [
                 Container(
-                  color: DARKEST,
                   margin: const EdgeInsets.only(
                     top: 10,
                     right: 10,
                     left: 10,
                   ),
+                  decoration: BoxDecoration(
+                      color: DARKEST, borderRadius: BorderRadius.circular(5)),
                   child: TextField(
                     onChanged: (v) => searchContoller.state = v,
                     maxLines: 1,
@@ -68,7 +69,7 @@ class HomeScreen extends HookWidget {
                   ),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     FilterButton(
                       todoFilter: todoFilter,
