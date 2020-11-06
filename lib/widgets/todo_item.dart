@@ -1,50 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:todo/models/todo.dart';
 import 'package:todo/pages/add_todo_screen.dart';
 import 'package:todo/providers/providers.dart';
 import 'package:todo/constants/colors.dart';
 import 'package:hooks_riverpod/all.dart';
 
-class TodoItem extends StatelessWidget {
+class TodoItem extends HookWidget {
   const TodoItem({
     Key key,
-    double elvation,
     @required this.todo,
-    @required this.isTest,
-  })  : elevation = elvation ?? 0,
-        super(key: key);
+  }) : super(key: key);
 
   final Todo todo;
-  final bool isTest;
-  final double elevation;
 
   @override
   Widget build(BuildContext context) {
+    final todoColor = useProvider(todoColorProvider);
     return GestureDetector(
       key: ValueKey(todo.id),
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => AddTodoScreen(
-            isNew: false,
-            todo: todo,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => AddTodoScreen(
+              isNew: false,
+              todo: todo,
+            ),
           ),
-        ),
-      ),
+        );
+        todoColor.state = Color(todo.color);
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 11),
         child: Material(
           borderRadius: BorderRadius.circular(5),
           child: Container(
-            //margin: const EdgeInsets.symmetric(vertical: 9, horizontal: 11),
-
             decoration: BoxDecoration(
                 color: DARKEST,
                 borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(
-                    color: RED,
+                    color: Color(todo.color) ?? RED,
                     spreadRadius: 1,
                     blurRadius: 0,
                   ),
@@ -55,12 +52,10 @@ class TodoItem extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    if (isTest)
-                      Handle(child: Icon(Icons.airline_seat_legroom_extra)),
                     Checkbox(
                       materialTapTargetSize: MaterialTapTargetSize.padded,
                       checkColor: DARKEST,
-                      activeColor: RED,
+                      activeColor: Color(todo.color) ?? RED,
                       value: todo.isDone,
                       onChanged: (_) => context
                           .read(hiveTodosProvider)

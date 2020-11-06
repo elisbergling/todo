@@ -22,7 +22,7 @@ class TodoAdapter extends TypeAdapter<Todo> {
       isDone: fields[2] as bool,
       id: fields[3] as String,
       index: fields[4] as int,
-      color: fields[5] as Color,
+      color: fields[5] as int,
     );
   }
 

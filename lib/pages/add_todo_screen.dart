@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/constants/colors.dart';
+import 'package:todo/constants/setting_colors.dart';
 import 'package:todo/models/todo.dart';
 import 'package:todo/providers/providers.dart';
 
@@ -15,10 +16,10 @@ class AddTodoScreen extends HookWidget {
         useTextEditingController(text: isNew ? '' : todo.title);
     final descriptionTextEditingContorller =
         useTextEditingController(text: isNew ? '' : todo.description);
+    final todoColor = useProvider(todoColorProvider);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        //backgroundColor: DARKEST,
         appBar: AppBar(
           leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -29,7 +30,7 @@ class AddTodoScreen extends HookWidget {
                   isDone: isNew ? false : todo.isDone,
                   id: isNew ? '' : todo.id,
                   index: isNew ? 0 : todo.index,
-                  color: todo.color,
+                  color: todoColor.state.value,
                 );
                 context
                     .read(hiveTodosProvider)
@@ -39,24 +40,44 @@ class AddTodoScreen extends HookWidget {
           title: Text('Add a Todo'),
           actions: [
             IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  if (!isNew)
-                    context.read(hiveTodosProvider).deleteTodo(id: todo.id);
-                  Navigator.of(context).pop();
-                })
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                if (!isNew)
+                  context.read(hiveTodosProvider).deleteTodo(id: todo.id);
+                Navigator.of(context).pop();
+              },
+            )
           ],
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
+              Container(
+                margin: const EdgeInsets.all(10),
+                height: 25,
+                child: ListView.builder(
+                  //shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () => todoColor.state = SETTINGS_COLORS[index],
+                    child: Container(
+                      width: 40,
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: todoColor.state == SETTINGS_COLORS[index]
+                            ? BorderRadius.circular(10)
+                            : BorderRadius.circular(4),
+                        color: SETTINGS_COLORS[index],
+                      ),
+                    ),
+                  ),
+                  itemCount: SETTINGS_COLORS.length,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: TextField(
                   controller: titleTextEditingContorller,
-                  maxLength: 30,
-                  maxLines: 1,
-                  minLines: 1,
                   cursorColor: RED,
                   style: TextStyle(
                     color: WHITE,
@@ -68,15 +89,10 @@ class AddTodoScreen extends HookWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 10,
-                  left: 10,
-                  right: 10,
-                ),
+                padding: const EdgeInsets.all(10),
                 child: TextField(
                   controller: descriptionTextEditingContorller,
-                  maxLength: 3000,
-                  maxLines: 18,
+                  maxLines: 14,
                   minLines: 1,
                   cursorColor: RED,
                   style: TextStyle(

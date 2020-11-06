@@ -17,7 +17,7 @@ class Todo {
   @HiveField(4)
   int index;
   @HiveField(5)
-  Color color;
+  int color;
 
   Todo({
     this.title,

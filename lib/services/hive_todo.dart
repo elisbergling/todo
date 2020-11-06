@@ -1,6 +1,5 @@
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/all.dart';
-import 'package:todo/constants/colors.dart';
 import 'package:todo/constants/strings.dart';
 import 'package:todo/constants/todo_filter.dart';
 import 'package:todo/models/todo.dart';
@@ -48,14 +47,6 @@ class HiveTodo {
 
   void updateTodos({int oldIndex, int newIndex, List<Todo> todos}) {
     try {
-      /*
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
-      final Todo todo = todos.removeAt(oldIndex);
-      todos.insert(newIndex, todo);
-*/
-
       if (oldIndex < newIndex) {
         todos[oldIndex].index = newIndex - 1;
         todoBox.put(todos[oldIndex].id, todos[oldIndex]);
