@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: DARKEST,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreenTest(),
+      home: HomeScreen(),
     );
   }
 }

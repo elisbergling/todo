@@ -38,7 +38,7 @@ class AddTodoScreen extends HookWidget {
                     .makeTodo(noteId: noteId, todo: newTodo, isNew: isNew);
                 Navigator.of(context).pop();
               }),
-          title: Text(isNew ? 'Add a Todo' : todo.title),
+          title: Text('Todo'),
           actions: [
             IconButton(
               icon: Icon(Icons.delete),

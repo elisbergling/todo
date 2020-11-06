@@ -9,9 +9,6 @@ import 'package:todo/services/hive_todo.dart';
 
 //General
 
-final openBoxProvider = FutureProvider.family<Future, String>(
-    (ref, noteId) => ref.watch(hiveTodosProvider).openBox(noteId: noteId));
-
 final searchContollerProvider = StateProvider<String>((_) => '');
 
 final todoColorProvider = StateProvider<Color>((_) => RED);
