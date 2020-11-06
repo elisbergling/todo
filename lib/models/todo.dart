@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:hive/hive.dart';
 
 part 'todo.g.dart';
@@ -5,18 +7,24 @@ part 'todo.g.dart';
 @HiveType(typeId: 0)
 class Todo {
   @HiveField(0)
-  final String title;
+  String title;
   @HiveField(1)
-  final String description;
+  String description;
   @HiveField(2)
-  final bool isDone;
+  bool isDone;
   @HiveField(3)
-  final String id;
+  String id;
+  @HiveField(4)
+  int index;
+  @HiveField(5)
+  Color color;
 
   Todo({
     this.title,
     this.description,
     this.isDone,
     this.id,
+    this.index,
+    this.color,
   });
 }

@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'Todo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        canvasColor: Colors.transparent,
         appBarTheme: AppBarTheme(
           color: RED,
           elevation: 0,

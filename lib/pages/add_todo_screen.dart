@@ -28,6 +28,8 @@ class AddTodoScreen extends HookWidget {
                   description: descriptionTextEditingContorller.text.trim(),
                   isDone: isNew ? false : todo.isDone,
                   id: isNew ? '' : todo.id,
+                  index: isNew ? 0 : todo.index,
+                  color: todo.color,
                 );
                 context
                     .read(hiveTodosProvider)

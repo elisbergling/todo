@@ -22,7 +22,8 @@ class FilterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10.5),
+      margin:
+          const EdgeInsets.only(top: 15, bottom: 6, left: 10.5, right: 10.5),
       height: 40,
       decoration:
           BoxDecoration(color: DARKEST, borderRadius: BorderRadius.circular(5)),

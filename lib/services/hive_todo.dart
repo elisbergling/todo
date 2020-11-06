@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/all.dart';
+import 'package:todo/constants/colors.dart';
 import 'package:todo/constants/strings.dart';
 import 'package:todo/constants/todo_filter.dart';
 import 'package:todo/models/todo.dart';
@@ -23,11 +24,13 @@ class HiveTodo {
     String searchText,
   }) {
     try {
+      String lowerText = searchText.toLowerCase();
       List<Todo> newTodos = todos
           .where((e) =>
-              e.description.contains(searchText) ||
-              e.title.contains(searchText))
+              e.description.toLowerCase().contains(lowerText) ||
+              e.title.toLowerCase().contains(lowerText))
           .toList();
+      newTodos.sort((a, b) => a.index.compareTo(b.index));
       switch (todoFilter.state) {
         case TodoFilter.done:
           return newTodos.where((todo) => todo.isDone).toList();
@@ -43,22 +46,45 @@ class HiveTodo {
     }
   }
 
+  void updateTodos({int oldIndex, int newIndex, List<Todo> todos}) {
+    try {
+      /*
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      final Todo todo = todos.removeAt(oldIndex);
+      todos.insert(newIndex, todo);
+*/
+
+      if (oldIndex < newIndex) {
+        todos[oldIndex].index = newIndex - 1;
+        todoBox.put(todos[oldIndex].id, todos[oldIndex]);
+        for (int i = oldIndex + 1; i < newIndex; i++) {
+          todos[i].index = todos[i].index - 1;
+          todoBox.put(todos[i].id, todos[i]);
+        }
+      } else {
+        todos[oldIndex].index = newIndex;
+        todoBox.put(todos[oldIndex].id, todos[oldIndex]);
+        for (int i = newIndex; i < oldIndex; i++) {
+          todos[i].index = todos[i].index + 1;
+          todoBox.put(todos[i].id, todos[i]);
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void makeTodo({Todo todo, bool isNew}) {
     try {
       if (todo.title != '' || todo.description != '') {
         Uuid uuid = Uuid();
-        Todo newTodo;
         if (isNew) {
-          newTodo = Todo(
-            title: todo.title,
-            isDone: todo.isDone,
-            description: todo.description,
-            id: uuid.v4(),
-          );
-        } else {
-          newTodo = todo;
+          todo.id = uuid.v4();
+          todo.index = todoBox.length;
         }
-        todoBox.put(newTodo.id, newTodo);
+        todoBox.put(todo.id, todo);
       }
     } catch (e) {
       print(e);
@@ -75,12 +101,8 @@ class HiveTodo {
 
   void toogleIsDoneTodo({Todo todo}) {
     try {
-      Todo newTodo = Todo(
-          title: todo.title,
-          description: todo.description,
-          isDone: !todo.isDone,
-          id: todo.id);
-      todoBox.put(todo.id, newTodo);
+      todo.isDone = !todo.isDone;
+      todoBox.put(todo.id, todo);
     } catch (e) {
       print(e);
     }

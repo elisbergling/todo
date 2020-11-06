@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:todo/models/todo.dart';
 import 'package:todo/pages/add_todo_screen.dart';
 import 'package:todo/providers/providers.dart';
@@ -8,12 +10,15 @@ import 'package:hooks_riverpod/all.dart';
 class TodoItem extends StatelessWidget {
   const TodoItem({
     Key key,
+    double elvation,
     @required this.todo,
-    @required this.i,
-  }) : super(key: key);
+    @required this.isTest,
+  })  : elevation = elvation ?? 0,
+        super(key: key);
 
   final Todo todo;
-  final int i;
+  final bool isTest;
+  final double elevation;
 
   @override
   Widget build(BuildContext context) {
@@ -27,56 +32,64 @@ class TodoItem extends StatelessWidget {
           ),
         ),
       ),
-      child: Container(
-        margin: i == 0
-            ? const EdgeInsets.only(top: 145, bottom: 9, left: 11, right: 11)
-            : const EdgeInsets.symmetric(vertical: 9, horizontal: 11),
-        decoration: BoxDecoration(
-            color: DARKER,
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: [
-              BoxShadow(
-                color: RED,
-                spreadRadius: 1,
-                blurRadius: 0,
-              ),
-            ]),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Checkbox(
-                  materialTapTargetSize: MaterialTapTargetSize.padded,
-                  checkColor: DARKEST,
-                  activeColor: RED,
-                  value: todo.isDone,
-                  onChanged: (_) => context
-                      .read(hiveTodosProvider)
-                      .toogleIsDoneTodo(todo: todo),
-                ),
-                Container(
-                  width: 270,
-                  child: Text(
-                    todo.title,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: WHITE, fontSize: 20),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 11),
+        child: Material(
+          borderRadius: BorderRadius.circular(5),
+          child: Container(
+            //margin: const EdgeInsets.symmetric(vertical: 9, horizontal: 11),
+
+            decoration: BoxDecoration(
+                color: DARKEST,
+                borderRadius: BorderRadius.circular(5),
+                boxShadow: [
+                  BoxShadow(
+                    color: RED,
+                    spreadRadius: 1,
+                    blurRadius: 0,
                   ),
+                ]),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    if (isTest)
+                      Handle(child: Icon(Icons.airline_seat_legroom_extra)),
+                    Checkbox(
+                      materialTapTargetSize: MaterialTapTargetSize.padded,
+                      checkColor: DARKEST,
+                      activeColor: RED,
+                      value: todo.isDone,
+                      onChanged: (_) => context
+                          .read(hiveTodosProvider)
+                          .toogleIsDoneTodo(todo: todo),
+                    ),
+                    Container(
+                      width: 250,
+                      child: Text(
+                        todo.title,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: WHITE, fontSize: 20),
+                      ),
+                    ),
+                  ],
                 ),
+                if (todo.description != '')
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      todo.description,
+                      style: TextStyle(
+                        color: WHITE,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
               ],
             ),
-            if (todo.description != '')
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  todo.description,
-                  style: TextStyle(
-                    color: WHITE,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-          ],
+          ),
         ),
       ),
     );

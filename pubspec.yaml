@@ -33,6 +33,7 @@ dependencies:
   hive:
   hive_flutter:
   uuid:
+  implicitly_animated_reorderable_list:
 
 dev_dependencies:
   flutter_test:
