@@ -1,38 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:todo/models/todo.dart';
-import 'package:todo/pages/add_todo_screen.dart';
+import 'package:todo/models/note.dart';
+import 'package:todo/pages/add_note_screen.dart';
 import 'package:todo/providers/providers.dart';
 import 'package:todo/constants/colors.dart';
 import 'package:hooks_riverpod/all.dart';
 
-class TodoItem extends HookWidget {
-  const TodoItem({
+class NoteItem extends HookWidget {
+  const NoteItem({
     Key key,
-    @required this.noteId,
-    @required this.todo,
+    @required this.note,
+    @required this.textEditingController,
   }) : super(key: key);
 
-  final Todo todo;
-  final String noteId;
+  final Note note;
+  final TextEditingController textEditingController;
 
   @override
   Widget build(BuildContext context) {
     final todoColor = useProvider(todoColorProvider);
+    final searchContoller = useProvider(searchContollerProvider);
     return GestureDetector(
       key: key,
-      onTap: () {
+      onTap: () async {
+        await context.read(hiveTodosProvider).openBox(noteId: note.id);
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => AddTodoScreen(
-              noteId: noteId,
+            builder: (_) => AddNoteScreen(
               isNew: false,
-              todo: todo,
+              note: note,
             ),
           ),
         );
-        todoColor.state = Color(todo.color);
+        textEditingController.text = '';
+        searchContoller.state = '';
+        todoColor.state = Color(note.color);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 11),
@@ -44,7 +47,7 @@ class TodoItem extends HookWidget {
                 borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(
-                    color: Color(todo.color) ?? RED,
+                    color: Color(note.color) ?? RED,
                     spreadRadius: 1,
                     blurRadius: 0,
                   ),
@@ -55,30 +58,24 @@ class TodoItem extends HookWidget {
               children: [
                 Row(
                   children: [
-                    Checkbox(
-                      materialTapTargetSize: MaterialTapTargetSize.padded,
-                      checkColor: DARKEST,
-                      activeColor: Color(todo.color) ?? RED,
-                      value: todo.isDone,
-                      onChanged: (_) => context
-                          .read(hiveTodosProvider)
-                          .toogleIsDoneTodo(noteId: noteId, todo: todo),
-                    ),
-                    Container(
-                      width: 250,
-                      child: Text(
-                        todo.title,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: WHITE, fontSize: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        width: 250,
+                        child: Text(
+                          note.title,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: WHITE, fontSize: 20),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                if (todo.description != '')
+                if (note.description.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: Text(
-                      todo.description,
+                      note.description,
                       style: TextStyle(
                         color: WHITE,
                         fontSize: 14,

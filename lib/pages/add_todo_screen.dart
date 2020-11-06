@@ -8,8 +8,9 @@ import 'package:todo/providers/providers.dart';
 
 class AddTodoScreen extends HookWidget {
   final Todo todo;
+  final String noteId;
   final bool isNew;
-  AddTodoScreen({this.todo, this.isNew});
+  AddTodoScreen({@required this.noteId, this.todo, this.isNew});
   @override
   Widget build(BuildContext context) {
     final titleTextEditingContorller =
@@ -34,19 +35,21 @@ class AddTodoScreen extends HookWidget {
                 );
                 context
                     .read(hiveTodosProvider)
-                    .makeTodo(todo: newTodo, isNew: isNew);
+                    .makeTodo(noteId: noteId, todo: newTodo, isNew: isNew);
                 Navigator.of(context).pop();
               }),
-          title: Text('Add a Todo'),
+          title: Text(isNew ? 'Add a Todo' : todo.title),
           actions: [
             IconButton(
               icon: Icon(Icons.delete),
               onPressed: () {
                 if (!isNew)
-                  context.read(hiveTodosProvider).deleteTodo(id: todo.id);
+                  context
+                      .read(hiveTodosProvider)
+                      .deleteTodo(noteId: noteId, id: todo.id);
                 Navigator.of(context).pop();
               },
-            )
+            ),
           ],
         ),
         body: SingleChildScrollView(
@@ -56,7 +59,7 @@ class AddTodoScreen extends HookWidget {
                 margin: const EdgeInsets.all(10),
                 height: 25,
                 child: ListView.builder(
-                  //shrinkWrap: true,
+                  shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) => GestureDetector(
                     onTap: () => todoColor.state = SETTINGS_COLORS[index],

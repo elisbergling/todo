@@ -1,16 +1,30 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/all.dart';
-import 'package:todo/constants/strings.dart';
 import 'package:todo/constants/todo_filter.dart';
 import 'package:todo/models/todo.dart';
 import 'package:uuid/uuid.dart';
 
 class HiveTodo {
-  Box todoBox = Hive.box<Todo>(TODOS);
-
-  Box<Todo> getTodos() {
+  Future openBox({@required String noteId}) async {
     try {
-      return todoBox;
+      await Hive.openBox<Todo>(noteId);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future closeBox({@required String noteId}) async {
+    try {
+      await Hive.box(noteId).close();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Box<Todo> getTodos({@required String noteId}) {
+    try {
+      return Hive.box<Todo>(noteId);
     } catch (e) {
       print(e);
       return null;
@@ -45,21 +59,26 @@ class HiveTodo {
     }
   }
 
-  void updateTodos({int oldIndex, int newIndex, List<Todo> todos}) {
+  void updateTodos({
+    @required String noteId,
+    int oldIndex,
+    int newIndex,
+    List<Todo> todos,
+  }) {
     try {
       if (oldIndex < newIndex) {
         todos[oldIndex].index = newIndex - 1;
-        todoBox.put(todos[oldIndex].id, todos[oldIndex]);
+        Hive.box<Todo>(noteId).put(todos[oldIndex].id, todos[oldIndex]);
         for (int i = oldIndex + 1; i < newIndex; i++) {
           todos[i].index = todos[i].index - 1;
-          todoBox.put(todos[i].id, todos[i]);
+          Hive.box<Todo>(noteId).put(todos[i].id, todos[i]);
         }
       } else {
         todos[oldIndex].index = newIndex;
-        todoBox.put(todos[oldIndex].id, todos[oldIndex]);
+        Hive.box<Todo>(noteId).put(todos[oldIndex].id, todos[oldIndex]);
         for (int i = newIndex; i < oldIndex; i++) {
           todos[i].index = todos[i].index + 1;
-          todoBox.put(todos[i].id, todos[i]);
+          Hive.box<Todo>(noteId).put(todos[i].id, todos[i]);
         }
       }
     } catch (e) {
@@ -67,33 +86,33 @@ class HiveTodo {
     }
   }
 
-  void makeTodo({Todo todo, bool isNew}) {
+  void makeTodo({@required String noteId, Todo todo, bool isNew}) {
     try {
       if (todo.title != '' || todo.description != '') {
         Uuid uuid = Uuid();
         if (isNew) {
           todo.id = uuid.v4();
-          todo.index = todoBox.length;
+          todo.index = Hive.box<Todo>(noteId).length;
         }
-        todoBox.put(todo.id, todo);
+        Hive.box<Todo>(noteId).put(todo.id, todo);
       }
     } catch (e) {
       print(e);
     }
   }
 
-  void deleteTodo({String id}) {
+  void deleteTodo({@required String noteId, String id}) {
     try {
-      todoBox.delete(id);
+      Hive.box<Todo>(noteId).delete(id);
     } catch (e) {
       print(e);
     }
   }
 
-  void toogleIsDoneTodo({Todo todo}) {
+  void toogleIsDoneTodo({@required String noteId, Todo todo}) {
     try {
       todo.isDone = !todo.isDone;
-      todoBox.put(todo.id, todo);
+      Hive.box<Todo>(noteId).put(todo.id, todo);
     } catch (e) {
       print(e);
     }

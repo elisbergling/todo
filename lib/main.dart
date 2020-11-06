@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:todo/pages/home_screen.dart';
 import 'constants/colors.dart';
 import 'constants/strings.dart';
+import 'models/note.dart';
 import 'models/todo.dart';
 
 void main() async {
@@ -13,8 +14,9 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final path = await getApplicationDocumentsDirectory();
   Hive.init(path.path);
+  Hive.registerAdapter(NoteAdapter());
   Hive.registerAdapter(TodoAdapter());
-  await Hive.openBox<Todo>(TODOS);
+  await Hive.openBox<Note>(NOTES);
   runApp(ProviderScope(child: MyApp()));
 }
 
@@ -50,7 +52,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: DARKEST,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      home: HomeScreenTest(),
     );
   }
 }

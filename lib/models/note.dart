@@ -1,26 +1,23 @@
 import 'package:hive/hive.dart';
 
-part 'todo.g.dart';
+part 'note.g.dart';
 
-@HiveType(typeId: 0)
-class Todo {
+@HiveType(typeId: 1)
+class Note {
   @HiveField(0)
   String title;
   @HiveField(1)
   String description;
   @HiveField(2)
-  bool isDone;
-  @HiveField(3)
   String id;
-  @HiveField(4)
+  @HiveField(3)
   int index;
-  @HiveField(5)
+  @HiveField(4)
   int color;
 
-  Todo({
+  Note({
     this.title,
     this.description,
-    this.isDone,
     this.id,
     this.index,
     this.color,

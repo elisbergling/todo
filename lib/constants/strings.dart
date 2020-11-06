@@ -1,2 +1,2 @@
-const TODO = 'todo';
 const TODOS = 'todos';
+const NOTES = 'notes';
