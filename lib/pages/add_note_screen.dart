@@ -18,7 +18,7 @@ class AddNoteScreen extends HookWidget {
         useTextEditingController(text: isNew ? '' : note.title);
     final descriptionTextEditingContorller =
         useTextEditingController(text: isNew ? '' : note.description);
-    final todoColor = useProvider(todoColorProvider);
+    final color = useProvider(colorProvider);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -31,7 +31,7 @@ class AddNoteScreen extends HookWidget {
                   description: descriptionTextEditingContorller.text.trim(),
                   id: note.id,
                   index: isNew ? 0 : note.index,
-                  color: todoColor.state.value,
+                  color: color.state.value,
                 );
                 context
                     .read(hiveNotesProvider)
@@ -66,7 +66,7 @@ class AddNoteScreen extends HookWidget {
           ],
         ),
         body: TodoList(
-          todoColor: todoColor,
+          color: color,
           titleTextEditingContorller: titleTextEditingContorller,
           descriptionTextEditingContorller: descriptionTextEditingContorller,
           searchContoller: searchContoller,

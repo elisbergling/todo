@@ -10,13 +10,13 @@ import 'package:todo/widgets/filter_button.dart';
 class TodoListHeader extends HookWidget {
   const TodoListHeader({
     Key key,
-    @required this.todoColor,
+    @required this.color,
     @required this.titleTextEditingContorller,
     @required this.descriptionTextEditingContorller,
     @required this.searchContoller,
   }) : super(key: key);
 
-  final StateController<Color> todoColor;
+  final StateController<Color> color;
   final TextEditingController titleTextEditingContorller;
   final TextEditingController descriptionTextEditingContorller;
   final StateController<String> searchContoller;
@@ -27,18 +27,18 @@ class TodoListHeader extends HookWidget {
     return Column(
       children: [
         Container(
-          margin: const EdgeInsets.all(10),
+          margin: const EdgeInsets.symmetric(vertical: 10),
           height: 25,
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) => GestureDetector(
-              onTap: () => todoColor.state = SETTINGS_COLORS[index],
+              onTap: () => color.state = SETTINGS_COLORS[index],
               child: Container(
                 width: 40,
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  borderRadius: todoColor.state == SETTINGS_COLORS[index]
+                  borderRadius: color.state == SETTINGS_COLORS[index]
                       ? BorderRadius.circular(10)
                       : BorderRadius.circular(4),
                   color: SETTINGS_COLORS[index],
@@ -52,7 +52,7 @@ class TodoListHeader extends HookWidget {
           padding: const EdgeInsets.all(10),
           child: TextField(
             controller: titleTextEditingContorller,
-            cursorColor: RED,
+            //cursorColor: RED,
             style: TextStyle(
               color: WHITE,
               fontSize: 24,
@@ -68,7 +68,7 @@ class TodoListHeader extends HookWidget {
             controller: descriptionTextEditingContorller,
             maxLines: 14,
             minLines: 1,
-            cursorColor: RED,
+            //cursorColor: RED,
             style: TextStyle(
               color: WHITE,
               fontSize: 16,
@@ -90,7 +90,7 @@ class TodoListHeader extends HookWidget {
             onChanged: (v) => searchContoller.state = v,
             maxLines: 1,
             minLines: 1,
-            cursorColor: RED,
+            //cursorColor: RED,
             style: TextStyle(
               color: WHITE,
               fontSize: 20,

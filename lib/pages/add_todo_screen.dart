@@ -17,7 +17,7 @@ class AddTodoScreen extends HookWidget {
         useTextEditingController(text: isNew ? '' : todo.title);
     final descriptionTextEditingContorller =
         useTextEditingController(text: isNew ? '' : todo.description);
-    final todoColor = useProvider(todoColorProvider);
+    final color = useProvider(colorProvider);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -31,7 +31,7 @@ class AddTodoScreen extends HookWidget {
                   isDone: isNew ? false : todo.isDone,
                   id: isNew ? '' : todo.id,
                   index: isNew ? 0 : todo.index,
-                  color: todoColor.state.value,
+                  color: color.state.value,
                 );
                 context
                     .read(hiveTodosProvider)
@@ -56,18 +56,18 @@ class AddTodoScreen extends HookWidget {
           child: Column(
             children: [
               Container(
-                margin: const EdgeInsets.all(10),
+                margin: const EdgeInsets.symmetric(vertical: 10),
                 height: 25,
                 child: ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) => GestureDetector(
-                    onTap: () => todoColor.state = SETTINGS_COLORS[index],
+                    onTap: () => color.state = SETTINGS_COLORS[index],
                     child: Container(
                       width: 40,
                       margin: const EdgeInsets.symmetric(horizontal: 8),
                       decoration: BoxDecoration(
-                        borderRadius: todoColor.state == SETTINGS_COLORS[index]
+                        borderRadius: color.state == SETTINGS_COLORS[index]
                             ? BorderRadius.circular(10)
                             : BorderRadius.circular(4),
                         color: SETTINGS_COLORS[index],
@@ -81,7 +81,7 @@ class AddTodoScreen extends HookWidget {
                 padding: const EdgeInsets.all(10),
                 child: TextField(
                   controller: titleTextEditingContorller,
-                  cursorColor: RED,
+                  //cursorColor: RED,
                   style: TextStyle(
                     color: WHITE,
                     fontSize: 24,
@@ -97,7 +97,7 @@ class AddTodoScreen extends HookWidget {
                   controller: descriptionTextEditingContorller,
                   maxLines: 14,
                   minLines: 1,
-                  cursorColor: RED,
+                  //cursorColor: RED,
                   style: TextStyle(
                     color: WHITE,
                     fontSize: 16,

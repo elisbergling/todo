@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:todo/constants/strings.dart';
 import 'package:todo/models/note.dart';
 import 'package:todo/pages/add_note_screen.dart';
 import 'package:todo/providers/providers.dart';
 import 'package:todo/constants/colors.dart';
 import 'package:hooks_riverpod/all.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class NoteItem extends HookWidget {
   const NoteItem({
@@ -19,8 +21,11 @@ class NoteItem extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final todoColor = useProvider(todoColorProvider);
+    final color = useProvider(colorProvider);
     final searchContoller = useProvider(searchContollerProvider);
+    final settings = useProvider(hiveSettingsProvider);
+    final colorListenable =
+        useValueListenable(settings.getSettings()?.listenable()).get(COLOR);
     return GestureDetector(
       key: key,
       onTap: () async {
@@ -35,7 +40,7 @@ class NoteItem extends HookWidget {
         );
         textEditingController.text = '';
         searchContoller.state = '';
-        todoColor.state = Color(note.color);
+        color.state = Color(note.color);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 11),
@@ -47,7 +52,7 @@ class NoteItem extends HookWidget {
                 borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(
-                    color: Color(note.color) ?? RED,
+                    color: Color(note.color) ?? Color(colorListenable),
                     spreadRadius: 1,
                     blurRadius: 0,
                   ),

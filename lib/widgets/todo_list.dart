@@ -10,14 +10,14 @@ import 'package:todo/widgets/todo_list_header.dart';
 class TodoList extends HookWidget {
   const TodoList({
     Key key,
-    @required this.todoColor,
+    @required this.color,
     @required this.titleTextEditingContorller,
     @required this.descriptionTextEditingContorller,
     @required this.searchContoller,
     @required this.note,
   }) : super(key: key);
 
-  final StateController<Color> todoColor;
+  final StateController<Color> color;
   final TextEditingController titleTextEditingContorller;
   final TextEditingController descriptionTextEditingContorller;
   final StateController<String> searchContoller;
@@ -35,7 +35,7 @@ class TodoList extends HookWidget {
     final scrollController = useScrollController();
     return ReorderableListView(
       header: TodoListHeader(
-        todoColor: todoColor,
+        color: color,
         titleTextEditingContorller: titleTextEditingContorller,
         descriptionTextEditingContorller: descriptionTextEditingContorller,
         searchContoller: searchContoller,

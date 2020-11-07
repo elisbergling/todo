@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/all.dart';
 import 'package:todo/constants/colors.dart';
+import 'package:todo/constants/strings.dart';
 import 'package:todo/constants/todo_filter.dart';
+import 'package:todo/providers/providers.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-class FilterButton extends StatelessWidget {
+class FilterButton extends HookWidget {
   const FilterButton({
     Key key,
     @required this.text,
@@ -15,12 +19,15 @@ class FilterButton extends StatelessWidget {
   final String text;
   final TodoFilter todoFilterEnum;
 
-  Color textColorForBorder() {
-    return todoFilter.state == todoFilterEnum ? RED : WHITE;
+  Color textColorForBorder(int color) {
+    return todoFilter.state == todoFilterEnum ? Color(color) : WHITE;
   }
 
   @override
   Widget build(BuildContext context) {
+    final settings = useProvider(hiveSettingsProvider);
+    final colorListenable =
+        useValueListenable(settings.getSettings()?.listenable()).get(COLOR);
     return Container(
       margin:
           const EdgeInsets.only(top: 15, bottom: 6, left: 10.5, right: 10.5),
@@ -29,7 +36,7 @@ class FilterButton extends StatelessWidget {
           BoxDecoration(color: DARKEST, borderRadius: BorderRadius.circular(5)),
       child: OutlineButton(
         onPressed: () => todoFilter.state = todoFilterEnum,
-        borderSide: BorderSide(color: textColorForBorder()),
+        borderSide: BorderSide(color: textColorForBorder(colorListenable)),
         visualDensity: VisualDensity.standard,
         child: Text(
           text,

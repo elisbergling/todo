@@ -5,13 +5,15 @@ import 'package:todo/constants/todo_filter.dart';
 import 'package:todo/models/note.dart';
 import 'package:todo/models/todo.dart';
 import 'package:todo/services/hive_note.dart';
+import 'package:todo/services/hive_settings.dart';
 import 'package:todo/services/hive_todo.dart';
 
 //General
 
 final searchContollerProvider = StateProvider<String>((_) => '');
 
-final todoColorProvider = StateProvider<Color>((_) => RED);
+final colorProvider = StateProvider<Color>(
+    (ref) => Color(ref.watch(hiveSettingsProvider).getColor()));
 
 //Todo
 
@@ -37,3 +39,7 @@ final sortedNotesProvider = Provider.family<List<Note>, List<Note>>(
         notes: notes,
       ),
 );
+
+//Settings
+
+final hiveSettingsProvider = Provider<HiveSettings>((ref) => HiveSettings());

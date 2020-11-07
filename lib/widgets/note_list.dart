@@ -30,6 +30,7 @@ class NoteList extends HookWidget {
         textEditingController: textEditingController,
         searchContoller: searchContoller,
       ),
+      padding: const EdgeInsets.all(0),
       children: sortedNotes
           .map((note) => NoteItem(
                 textEditingController: textEditingController,
