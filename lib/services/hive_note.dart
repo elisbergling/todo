@@ -4,9 +4,9 @@ import 'package:todo/models/note.dart';
 import 'package:todo/models/todo.dart';
 
 class HiveNote {
-  Box noteBox = Hive.box<Note>(NOTES);
+  Box<Note> noteBox = Hive.box<Note>(NOTES);
 
-  Box<Note> getNotes() {
+  Box<Note>? getNotes() {
     try {
       return noteBox;
     } catch (e) {
@@ -15,9 +15,9 @@ class HiveNote {
     }
   }
 
-  List<Note> sortedNotes({
-    List<Note> notes,
-    String searchText,
+  List<Note>? sortedNotes({
+    required List<Note> notes,
+    required String searchText,
   }) {
     try {
       String lowerText = searchText.toLowerCase();
@@ -34,7 +34,11 @@ class HiveNote {
     }
   }
 
-  void updateNotes({int oldIndex, int newIndex, List<Note> notes}) {
+  void updateNotes({
+    required int oldIndex,
+    required int newIndex,
+    required List<Note> notes,
+  }) {
     try {
       if (oldIndex < newIndex) {
         notes[oldIndex].index = newIndex - 1;
@@ -56,7 +60,10 @@ class HiveNote {
     }
   }
 
-  void makeNote({Note note, bool isNew}) {
+  void makeNote({
+    required Note note,
+    required bool isNew,
+  }) {
     try {
       if (note.title != '' || note.description != '') {
         if (isNew) {
@@ -69,7 +76,7 @@ class HiveNote {
     }
   }
 
-  void deleteNote({String id}) {
+  void deleteNote({required String id}) {
     try {
       noteBox.delete(id);
       Hive.box<Todo>(id).deleteFromDisk();

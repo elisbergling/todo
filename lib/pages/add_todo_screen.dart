@@ -7,16 +7,20 @@ import 'package:todo/models/todo.dart';
 import 'package:todo/providers/providers.dart';
 
 class AddTodoScreen extends HookWidget {
-  final Todo todo;
+  final Todo? todo;
   final String noteId;
-  final bool isNew;
-  AddTodoScreen({@required this.noteId, this.todo, this.isNew});
+  AddTodoScreen({
+    required this.noteId,
+    required this.todo,
+  });
+
+  bool get isNew => todo == null;
   @override
   Widget build(BuildContext context) {
     final titleTextEditingContorller =
-        useTextEditingController(text: isNew ? '' : todo.title);
+        useTextEditingController(text: isNew ? '' : todo!.title);
     final descriptionTextEditingContorller =
-        useTextEditingController(text: isNew ? '' : todo.description);
+        useTextEditingController(text: isNew ? '' : todo!.description);
     final color = useProvider(colorProvider);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -28,9 +32,9 @@ class AddTodoScreen extends HookWidget {
                 Todo newTodo = Todo(
                   title: titleTextEditingContorller.text.trim(),
                   description: descriptionTextEditingContorller.text.trim(),
-                  isDone: isNew ? false : todo.isDone,
-                  id: isNew ? '' : todo.id,
-                  index: isNew ? 0 : todo.index,
+                  isDone: isNew ? false : todo!.isDone,
+                  id: isNew ? '' : todo!.id,
+                  index: isNew ? 0 : todo!.index,
                   color: color.state.value,
                 );
                 context
@@ -46,7 +50,7 @@ class AddTodoScreen extends HookWidget {
                 if (!isNew)
                   context
                       .read(hiveTodosProvider)
-                      .deleteTodo(noteId: noteId, id: todo.id);
+                      .deleteTodo(noteId: noteId, id: todo!.id);
                 Navigator.of(context).pop();
               },
             ),

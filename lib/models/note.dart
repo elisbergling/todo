@@ -16,10 +16,10 @@ class Note {
   int color;
 
   Note({
-    this.title,
-    this.description,
-    this.id,
-    this.index,
-    this.color,
+    required this.title,
+    required this.description,
+    required this.id,
+    required this.index,
+    required this.color,
   });
 }

@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-const SETTINGS_COLORS = [
+const List<Color> SETTINGS_COLORS = [
   Color(0xffff5252),
   Color(0xff69f0ae),
   Color(0xffffeb3b),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/all.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/constants/colors.dart';
 import 'package:todo/constants/setting_colors.dart';
 import 'package:todo/constants/todo_filter.dart';
@@ -9,12 +9,12 @@ import 'package:todo/widgets/filter_button.dart';
 
 class TodoListHeader extends HookWidget {
   const TodoListHeader({
-    Key key,
-    @required this.color,
-    @required this.titleTextEditingContorller,
-    @required this.descriptionTextEditingContorller,
-    @required this.searchContoller,
-  }) : super(key: key);
+    super.key,
+    required this.color,
+    required this.titleTextEditingContorller,
+    required this.descriptionTextEditingContorller,
+    required this.searchContoller,
+  });
 
   final StateController<Color> color;
   final TextEditingController titleTextEditingContorller;

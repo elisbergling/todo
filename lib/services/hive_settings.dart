@@ -3,9 +3,9 @@ import 'package:todo/constants/colors.dart';
 import '../constants/strings.dart';
 
 class HiveSettings {
-  Box settingsBox = Hive.box<int>(SETTINGS);
+  Box<int> settingsBox = Hive.box<int>(SETTINGS);
 
-  Box<int> getSettings() {
+  Box<int>? getSettings() {
     try {
       if (settingsBox.get(COLOR) == null) {
         makeSettings(RED.value);
@@ -17,7 +17,7 @@ class HiveSettings {
     }
   }
 
-  int getColor() {
+  int? getColor() {
     try {
       return settingsBox.get(COLOR) ?? RED.value;
     } catch (e) {

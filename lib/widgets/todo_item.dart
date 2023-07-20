@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:todo/constants/strings.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/models/todo.dart';
 import 'package:todo/pages/add_todo_screen.dart';
 import 'package:todo/providers/providers.dart';
 import 'package:todo/constants/colors.dart';
-import 'package:hooks_riverpod/all.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class TodoItem extends HookWidget {
   const TodoItem({
-    Key key,
-    @required this.noteId,
-    @required this.todo,
-  }) : super(key: key);
+    super.key,
+    required this.noteId,
+    required this.todo,
+  });
 
   final Todo todo;
   final String noteId;
@@ -22,9 +19,6 @@ class TodoItem extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final color = useProvider(colorProvider);
-    final settings = useProvider(hiveSettingsProvider);
-    final colorListenable =
-        useValueListenable(settings.getSettings()?.listenable()).get(COLOR);
     return GestureDetector(
       key: key,
       onTap: () {
@@ -32,7 +26,6 @@ class TodoItem extends HookWidget {
           MaterialPageRoute(
             builder: (_) => AddTodoScreen(
               noteId: noteId,
-              isNew: false,
               todo: todo,
             ),
           ),
@@ -49,7 +42,7 @@ class TodoItem extends HookWidget {
                 borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(
-                    color: Color(todo.color) ?? Color(colorListenable),
+                    color: Color(todo.color),
                     spreadRadius: 1,
                     blurRadius: 0,
                   ),
@@ -63,7 +56,7 @@ class TodoItem extends HookWidget {
                     Checkbox(
                       materialTapTargetSize: MaterialTapTargetSize.padded,
                       checkColor: DARKEST,
-                      activeColor: Color(todo.color) ?? Color(colorListenable),
+                      activeColor: Color(todo.color),
                       value: todo.isDone,
                       onChanged: (_) => context
                           .read(hiveTodosProvider)

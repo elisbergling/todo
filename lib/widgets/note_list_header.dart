@@ -1,6 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/all.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/constants/colors.dart';
 import 'package:todo/constants/setting_colors.dart';
 import 'package:todo/constants/strings.dart';
@@ -9,10 +10,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class NoteListHeader extends HookWidget {
   const NoteListHeader({
-    Key key,
-    @required this.textEditingController,
-    @required this.searchContoller,
-  }) : super(key: key);
+    super.key,
+    required this.textEditingController,
+    required this.searchContoller,
+  });
 
   final TextEditingController textEditingController;
   final StateController<String> searchContoller;
@@ -20,8 +21,9 @@ class NoteListHeader extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final settings = useProvider(hiveSettingsProvider);
-    final colorListenable =
-        useValueListenable(settings.getSettings()?.listenable()).get(COLOR);
+    final colorListenable = useValueListenable(
+            settings.getSettings()?.listenable() as ValueListenable)
+        .get(COLOR);
     return Column(
       children: [
         Container(

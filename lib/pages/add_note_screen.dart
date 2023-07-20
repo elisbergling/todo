@@ -4,20 +4,23 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/models/note.dart';
 import 'package:todo/pages/add_todo_screen.dart';
 import 'package:todo/providers/providers.dart';
-import 'package:hooks_riverpod/all.dart';
 import 'package:todo/widgets/todo_list.dart';
 
 class AddNoteScreen extends HookWidget {
-  final Note note;
-  final bool isNew;
-  AddNoteScreen({this.note, this.isNew});
+  final Note? note;
+  final String? id;
+  AddNoteScreen({
+    required this.note,
+    this.id,
+  });
+  bool get isNew => note == null;
   @override
   Widget build(BuildContext context) {
     final searchContoller = useProvider(searchContollerProvider);
     final titleTextEditingContorller =
-        useTextEditingController(text: isNew ? '' : note.title);
+        useTextEditingController(text: isNew ? '' : note!.title);
     final descriptionTextEditingContorller =
-        useTextEditingController(text: isNew ? '' : note.description);
+        useTextEditingController(text: isNew ? '' : note!.description);
     final color = useProvider(colorProvider);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -29,8 +32,8 @@ class AddNoteScreen extends HookWidget {
                 Note newNote = Note(
                   title: titleTextEditingContorller.text.trim(),
                   description: descriptionTextEditingContorller.text.trim(),
-                  id: note.id,
-                  index: isNew ? 0 : note.index,
+                  id: isNew ? id! : note!.id,
+                  index: isNew ? 0 : note!.index,
                   color: color.state.value,
                 );
                 context
@@ -47,8 +50,7 @@ class AddNoteScreen extends HookWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => AddTodoScreen(
-                      noteId: note.id,
-                      isNew: true,
+                      noteId: isNew ? id! : note!.id,
                       todo: null,
                     ),
                   ),
@@ -59,7 +61,7 @@ class AddNoteScreen extends HookWidget {
               icon: Icon(Icons.delete),
               onPressed: () {
                 if (!isNew)
-                  context.read(hiveNotesProvider).deleteNote(id: note.id);
+                  context.read(hiveNotesProvider).deleteNote(id: note!.id);
                 Navigator.of(context).pop();
               },
             )
@@ -70,7 +72,7 @@ class AddNoteScreen extends HookWidget {
           titleTextEditingContorller: titleTextEditingContorller,
           descriptionTextEditingContorller: descriptionTextEditingContorller,
           searchContoller: searchContoller,
-          note: note,
+          id: isNew ? id! : note!.id,
         ),
       ),
     );

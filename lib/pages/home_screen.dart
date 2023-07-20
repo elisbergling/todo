@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/all.dart';
-import 'package:todo/models/note.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/pages/add_note_screen.dart';
 import 'package:todo/providers/providers.dart';
 import 'package:todo/widgets/note_list.dart';
@@ -22,13 +21,13 @@ class HomeScreen extends HookWidget {
             icon: Icon(Icons.add),
             onPressed: () async {
               Uuid uuid = Uuid();
-              Note note = Note(id: uuid.v4());
-              await context.read(hiveTodosProvider).openBox(noteId: note.id);
+              String id = uuid.v4();
+              await context.read(hiveTodosProvider).openBox(noteId: id);
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => AddNoteScreen(
-                    isNew: true,
-                    note: note,
+                    note: null,
+                    id: id,
                   ),
                 ),
               );

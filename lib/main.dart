@@ -1,9 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hooks_riverpod/all.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:todo/pages/home_screen.dart';
 import 'package:todo/providers/providers.dart';
@@ -28,8 +28,9 @@ class MyApp extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final settings = useProvider(hiveSettingsProvider);
-    final colorListenable =
-        useValueListenable(settings.getSettings()?.listenable()).get(COLOR);
+    final colorListenable = useValueListenable(
+            settings.getSettings()?.listenable() as ValueListenable)
+        .get(COLOR);
     return MaterialApp(
       title: 'Todo',
       debugShowCheckedModeBanner: false,

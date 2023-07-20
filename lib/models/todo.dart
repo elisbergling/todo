@@ -18,11 +18,11 @@ class Todo {
   int color;
 
   Todo({
-    this.title,
-    this.description,
-    this.isDone,
-    this.id,
-    this.index,
-    this.color,
+    required this.title,
+    required this.description,
+    required this.isDone,
+    required this.id,
+    required this.index,
+    required this.color,
   });
 }

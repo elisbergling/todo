@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
-import 'package:hooks_riverpod/all.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/constants/todo_filter.dart';
 import 'package:todo/models/todo.dart';
 import 'package:uuid/uuid.dart';
 
 class HiveTodo {
-  Future openBox({@required String noteId}) async {
+  Future openBox({required String noteId}) async {
     try {
       await Hive.openBox<Todo>(noteId);
     } catch (e) {
@@ -14,7 +13,7 @@ class HiveTodo {
     }
   }
 
-  Future closeBox({@required String noteId}) async {
+  Future closeBox({required String noteId}) async {
     try {
       await Hive.box(noteId).close();
     } catch (e) {
@@ -22,7 +21,7 @@ class HiveTodo {
     }
   }
 
-  Box<Todo> getTodos({@required String noteId}) {
+  Box<Todo>? getTodos({required String noteId}) {
     try {
       return Hive.box<Todo>(noteId);
     } catch (e) {
@@ -31,10 +30,10 @@ class HiveTodo {
     }
   }
 
-  List<Todo> sortedTodos({
-    List<Todo> todos,
-    StateController<TodoFilter> todoFilter,
-    String searchText,
+  List<Todo>? sortedTodos({
+    required List<Todo> todos,
+    required StateController<TodoFilter> todoFilter,
+    required String searchText,
   }) {
     try {
       String lowerText = searchText.toLowerCase();
@@ -60,10 +59,10 @@ class HiveTodo {
   }
 
   void updateTodos({
-    @required String noteId,
-    int oldIndex,
-    int newIndex,
-    List<Todo> todos,
+    required String noteId,
+    required int oldIndex,
+    required int newIndex,
+    required List<Todo> todos,
   }) {
     try {
       if (oldIndex < newIndex) {
@@ -86,7 +85,11 @@ class HiveTodo {
     }
   }
 
-  void makeTodo({@required String noteId, Todo todo, bool isNew}) {
+  void makeTodo({
+    required String noteId,
+    required Todo todo,
+    required bool isNew,
+  }) {
     try {
       if (todo.title != '' || todo.description != '') {
         Uuid uuid = Uuid();
@@ -101,7 +104,10 @@ class HiveTodo {
     }
   }
 
-  void deleteTodo({@required String noteId, String id}) {
+  void deleteTodo({
+    required String noteId,
+    required String id,
+  }) {
     try {
       Hive.box<Todo>(noteId).delete(id);
     } catch (e) {
@@ -109,7 +115,10 @@ class HiveTodo {
     }
   }
 
-  void toogleIsDoneTodo({@required String noteId, Todo todo}) {
+  void toogleIsDoneTodo({
+    required String noteId,
+    required Todo todo,
+  }) {
     try {
       todo.isDone = !todo.isDone;
       Hive.box<Todo>(noteId).put(todo.id, todo);
