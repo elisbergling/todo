@@ -33,19 +33,19 @@ class TodoListHeader extends HookWidget {
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) => GestureDetector(
-              onTap: () => color.state = SETTINGS_COLORS[index],
+              onTap: () => color.state = SettingsColors.colors[index],
               child: Container(
                 width: 40,
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  borderRadius: color.state == SETTINGS_COLORS[index]
+                  borderRadius: color.state == SettingsColors.colors[index]
                       ? BorderRadius.circular(10)
                       : BorderRadius.circular(4),
-                  color: SETTINGS_COLORS[index],
+                  color: SettingsColors.colors[index],
                 ),
               ),
             ),
-            itemCount: SETTINGS_COLORS.length,
+            itemCount: SettingsColors.colors.length,
           ),
         ),
         Padding(
@@ -53,11 +53,11 @@ class TodoListHeader extends HookWidget {
           child: TextField(
             controller: titleTextEditingContorller,
             //cursorColor: RED,
-            style: TextStyle(
-              color: WHITE,
+            style: const TextStyle(
+              color: MyColors.white,
               fontSize: 24,
             ),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Title',
             ),
           ),
@@ -69,11 +69,11 @@ class TodoListHeader extends HookWidget {
             maxLines: 14,
             minLines: 1,
             //cursorColor: RED,
-            style: TextStyle(
-              color: WHITE,
+            style: const TextStyle(
+              color: MyColors.white,
               fontSize: 16,
             ),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Description',
             ),
           ),
@@ -85,38 +85,43 @@ class TodoListHeader extends HookWidget {
             left: 10,
           ),
           decoration: BoxDecoration(
-              color: DARKEST, borderRadius: BorderRadius.circular(5)),
+            color: MyColors.darkest,
+            borderRadius: BorderRadius.circular(5),
+          ),
           child: TextField(
             onChanged: (v) => searchContoller.state = v,
             maxLines: 1,
             minLines: 1,
             //cursorColor: RED,
-            style: TextStyle(
-              color: WHITE,
+            style: const TextStyle(
+              color: MyColors.white,
               fontSize: 20,
             ),
-            decoration: InputDecoration(labelText: 'Search'),
+            decoration: const InputDecoration(labelText: 'Search'),
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            FilterButton(
-              todoFilter: todoFilter,
-              todoFilterEnum: TodoFilter.all,
-              text: 'All',
-            ),
-            FilterButton(
-              todoFilter: todoFilter,
-              todoFilterEnum: TodoFilter.notDone,
-              text: 'Active',
-            ),
-            FilterButton(
-              todoFilter: todoFilter,
-              todoFilterEnum: TodoFilter.done,
-              text: 'Completed',
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FilterButton(
+                todoFilter: todoFilter,
+                todoFilterEnum: TodoFilter.all,
+                text: 'All',
+              ),
+              FilterButton(
+                todoFilter: todoFilter,
+                todoFilterEnum: TodoFilter.notDone,
+                text: 'Active',
+              ),
+              FilterButton(
+                todoFilter: todoFilter,
+                todoFilterEnum: TodoFilter.done,
+                text: 'Completed',
+              ),
+            ],
+          ),
         ),
       ],
     );

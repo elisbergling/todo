@@ -1,4 +1,6 @@
-const TODOS = 'todos';
-const NOTES = 'notes';
-const COLOR = 'color';
-const SETTINGS = 'settings';
+class MyStrings {
+  static const todos = 'todos';
+  static const notes = 'notes';
+  static const color = 'color';
+  static const settings = 'settings';
+}

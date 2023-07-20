@@ -9,7 +9,8 @@ import 'package:todo/providers/providers.dart';
 class AddTodoScreen extends HookWidget {
   final Todo? todo;
   final String noteId;
-  AddTodoScreen({
+  const AddTodoScreen({
+    super.key,
     required this.noteId,
     required this.todo,
   });
@@ -27,7 +28,7 @@ class AddTodoScreen extends HookWidget {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Todo newTodo = Todo(
                   title: titleTextEditingContorller.text.trim(),
@@ -42,15 +43,16 @@ class AddTodoScreen extends HookWidget {
                     .makeTodo(noteId: noteId, todo: newTodo, isNew: isNew);
                 Navigator.of(context).pop();
               }),
-          title: Text('Todo'),
+          title: const Text('Todo'),
           actions: [
             IconButton(
-              icon: Icon(Icons.delete),
+              icon: const Icon(Icons.delete),
               onPressed: () {
-                if (!isNew)
+                if (!isNew) {
                   context
                       .read(hiveTodosProvider)
                       .deleteTodo(noteId: noteId, id: todo!.id);
+                }
                 Navigator.of(context).pop();
               },
             ),
@@ -66,19 +68,20 @@ class AddTodoScreen extends HookWidget {
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) => GestureDetector(
-                    onTap: () => color.state = SETTINGS_COLORS[index],
+                    onTap: () => color.state = SettingsColors.colors[index],
                     child: Container(
                       width: 40,
                       margin: const EdgeInsets.symmetric(horizontal: 8),
                       decoration: BoxDecoration(
-                        borderRadius: color.state == SETTINGS_COLORS[index]
-                            ? BorderRadius.circular(10)
-                            : BorderRadius.circular(4),
-                        color: SETTINGS_COLORS[index],
+                        borderRadius:
+                            color.state == SettingsColors.colors[index]
+                                ? BorderRadius.circular(10)
+                                : BorderRadius.circular(4),
+                        color: SettingsColors.colors[index],
                       ),
                     ),
                   ),
-                  itemCount: SETTINGS_COLORS.length,
+                  itemCount: SettingsColors.colors.length,
                 ),
               ),
               Padding(
@@ -86,11 +89,11 @@ class AddTodoScreen extends HookWidget {
                 child: TextField(
                   controller: titleTextEditingContorller,
                   //cursorColor: RED,
-                  style: TextStyle(
-                    color: WHITE,
+                  style: const TextStyle(
+                    color: MyColors.white,
                     fontSize: 24,
                   ),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Title',
                   ),
                 ),
@@ -102,11 +105,11 @@ class AddTodoScreen extends HookWidget {
                   maxLines: 14,
                   minLines: 1,
                   //cursorColor: RED,
-                  style: TextStyle(
-                    color: WHITE,
+                  style: const TextStyle(
+                    color: MyColors.white,
                     fontSize: 16,
                   ),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Description',
                   ),
                 ),

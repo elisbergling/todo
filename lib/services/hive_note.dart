@@ -4,7 +4,7 @@ import 'package:todo/models/note.dart';
 import 'package:todo/models/todo.dart';
 
 class HiveNote {
-  Box<Note> noteBox = Hive.box<Note>(NOTES);
+  Box<Note> noteBox = Hive.box<Note>(MyStrings.notes);
 
   Box<Note>? getNotes() {
     try {

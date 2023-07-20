@@ -40,13 +40,6 @@ class TodoList extends HookWidget {
         descriptionTextEditingContorller: descriptionTextEditingContorller,
         searchContoller: searchContoller,
       ),
-      children: sortedTodos
-          .map((e) => TodoItem(
-                todo: e,
-                noteId: id,
-                key: ValueKey(e.id),
-              ))
-          .toList(),
       onReorder: (oldIndex, newIndex) =>
           context.read(hiveTodosProvider).updateTodos(
                 noteId: id,
@@ -55,6 +48,13 @@ class TodoList extends HookWidget {
                 todos: sortedTodos,
               ),
       scrollController: scrollController,
+      children: sortedTodos
+          .map((e) => TodoItem(
+                todo: e,
+                noteId: id,
+                key: ValueKey(e.id),
+              ))
+          .toList(),
     );
   }
 }

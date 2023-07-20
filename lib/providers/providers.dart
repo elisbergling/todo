@@ -12,8 +12,8 @@ import 'package:todo/services/hive_todo.dart';
 
 final searchContollerProvider = StateProvider<String>((_) => '');
 
-final colorProvider = StateProvider<Color>(
-    (ref) => Color(ref.watch(hiveSettingsProvider).getColor() ?? RED.value));
+final colorProvider = StateProvider<Color>((ref) =>
+    Color(ref.watch(hiveSettingsProvider).getColor() ?? MyColors.red.value));
 
 //Todo
 

@@ -19,18 +19,20 @@ void main() async {
   Hive.init(path.path);
   Hive.registerAdapter(NoteAdapter());
   Hive.registerAdapter(TodoAdapter());
-  await Hive.openBox<int>(SETTINGS);
-  await Hive.openBox<Note>(NOTES);
-  runApp(ProviderScope(child: MyApp()));
+  await Hive.openBox<int>(MyStrings.settings);
+  await Hive.openBox<Note>(MyStrings.notes);
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends HookWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     final settings = useProvider(hiveSettingsProvider);
     final colorListenable = useValueListenable(
             settings.getSettings()?.listenable() as ValueListenable)
-        .get(COLOR);
+        .get(MyStrings.color);
     return MaterialApp(
       title: 'Todo',
       debugShowCheckedModeBanner: false,
@@ -45,22 +47,22 @@ class MyApp extends HookWidget {
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Color(colorListenable)),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: WHITE),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: MyColors.white),
           ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: ERROR_COLOR),
+          errorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: MyColors.error),
           ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: ERROR_COLOR),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: MyColors.error),
           ),
-          labelStyle: TextStyle(color: WHITE),
-          helperStyle: TextStyle(color: WHITE),
+          labelStyle: const TextStyle(color: MyColors.white),
+          helperStyle: const TextStyle(color: MyColors.white),
         ),
-        scaffoldBackgroundColor: DARKEST,
+        scaffoldBackgroundColor: MyColors.darkest,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }

@@ -9,7 +9,8 @@ import 'package:todo/widgets/todo_list.dart';
 class AddNoteScreen extends HookWidget {
   final Note? note;
   final String? id;
-  AddNoteScreen({
+  const AddNoteScreen({
+    super.key,
     required this.note,
     this.id,
   });
@@ -27,7 +28,7 @@ class AddNoteScreen extends HookWidget {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Note newNote = Note(
                   title: titleTextEditingContorller.text.trim(),
@@ -42,10 +43,10 @@ class AddNoteScreen extends HookWidget {
                 Navigator.of(context).pop();
                 searchContoller.state = '';
               }),
-          title: Text('Note'),
+          title: const Text('Note'),
           actions: [
             IconButton(
-              icon: Icon(Icons.library_add),
+              icon: const Icon(Icons.library_add),
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -58,10 +59,11 @@ class AddNoteScreen extends HookWidget {
               },
             ),
             IconButton(
-              icon: Icon(Icons.delete),
+              icon: const Icon(Icons.delete),
               onPressed: () {
-                if (!isNew)
+                if (!isNew) {
                   context.read(hiveNotesProvider).deleteNote(id: note!.id);
+                }
                 Navigator.of(context).pop();
               },
             )

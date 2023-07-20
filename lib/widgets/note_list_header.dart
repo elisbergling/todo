@@ -23,7 +23,7 @@ class NoteListHeader extends HookWidget {
     final settings = useProvider(hiveSettingsProvider);
     final colorListenable = useValueListenable(
             settings.getSettings()?.listenable() as ValueListenable)
-        .get(COLOR);
+        .get(MyStrings.color);
     return Column(
       children: [
         Container(
@@ -34,26 +34,27 @@ class NoteListHeader extends HookWidget {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) => GestureDetector(
               onTap: () => context.read(hiveSettingsProvider).makeSettings(
-                    SETTINGS_COLORS[index].value,
-                  ), //color.state = SETTINGS_COLORS[index],
+                    SettingsColors.colors[index].value,
+                  ),
               child: Container(
                 width: 40,
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  borderRadius: colorListenable == SETTINGS_COLORS[index].value
-                      ? BorderRadius.circular(10)
-                      : BorderRadius.circular(4),
-                  color: SETTINGS_COLORS[index],
+                  borderRadius:
+                      colorListenable == SettingsColors.colors[index].value
+                          ? BorderRadius.circular(10)
+                          : BorderRadius.circular(4),
+                  color: SettingsColors.colors[index],
                 ),
               ),
             ),
-            itemCount: SETTINGS_COLORS.length,
+            itemCount: SettingsColors.colors.length,
           ),
         ),
         Container(
           margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: DARKEST,
+            color: MyColors.darkest,
             borderRadius: BorderRadius.circular(5),
           ),
           child: TextField(
@@ -61,12 +62,12 @@ class NoteListHeader extends HookWidget {
             onChanged: (v) => searchContoller.state = v,
             maxLines: 1,
             minLines: 1,
-            cursorColor: RED,
-            style: TextStyle(
-              color: WHITE,
+            cursorColor: MyColors.red,
+            style: const TextStyle(
+              color: MyColors.white,
               fontSize: 20,
             ),
-            decoration: InputDecoration(labelText: 'Search'),
+            decoration: const InputDecoration(labelText: 'Search'),
           ),
         ),
       ],

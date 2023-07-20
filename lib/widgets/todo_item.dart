@@ -38,7 +38,7 @@ class TodoItem extends HookWidget {
           borderRadius: BorderRadius.circular(5),
           child: Container(
             decoration: BoxDecoration(
-                color: DARKEST,
+                color: MyColors.darkest,
                 borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(
@@ -55,19 +55,20 @@ class TodoItem extends HookWidget {
                   children: [
                     Checkbox(
                       materialTapTargetSize: MaterialTapTargetSize.padded,
-                      checkColor: DARKEST,
+                      checkColor: MyColors.darkest,
                       activeColor: Color(todo.color),
                       value: todo.isDone,
                       onChanged: (_) => context
                           .read(hiveTodosProvider)
                           .toogleIsDoneTodo(noteId: noteId, todo: todo),
                     ),
-                    Container(
+                    SizedBox(
                       width: 250,
                       child: Text(
                         todo.title,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: WHITE, fontSize: 20),
+                        style: const TextStyle(
+                            color: MyColors.white, fontSize: 20),
                       ),
                     ),
                   ],
@@ -77,8 +78,8 @@ class TodoItem extends HookWidget {
                     padding: const EdgeInsets.all(10),
                     child: Text(
                       todo.description,
-                      style: TextStyle(
-                        color: WHITE,
+                      style: const TextStyle(
+                        color: MyColors.white,
                         fontSize: 14,
                       ),
                     ),

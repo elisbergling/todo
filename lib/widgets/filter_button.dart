@@ -21,7 +21,7 @@ class FilterButton extends HookWidget {
   final TodoFilter todoFilterEnum;
 
   Color textColorForBorder(int color) {
-    return todoFilter.state == todoFilterEnum ? Color(color) : WHITE;
+    return todoFilter.state == todoFilterEnum ? Color(color) : MyColors.white;
   }
 
   @override
@@ -29,13 +29,12 @@ class FilterButton extends HookWidget {
     final settings = useProvider(hiveSettingsProvider);
     final colorListenable = useValueListenable(
             settings.getSettings()?.listenable() as ValueListenable)
-        .get(COLOR);
+        .get(MyStrings.color);
     return Container(
-      margin:
-          const EdgeInsets.only(top: 15, bottom: 6, left: 10.5, right: 10.5),
+      margin: const EdgeInsets.only(top: 15, bottom: 6, left: 10, right: 1),
       height: 40,
-      decoration:
-          BoxDecoration(color: DARKEST, borderRadius: BorderRadius.circular(5)),
+      decoration: BoxDecoration(
+          color: MyColors.darkest, borderRadius: BorderRadius.circular(5)),
       child: OutlinedButton(
         onPressed: () => todoFilter.state = todoFilterEnum,
         style: ButtonStyle(
@@ -47,7 +46,7 @@ class FilterButton extends HookWidget {
         child: Text(
           text,
           textAlign: TextAlign.center,
-          style: TextStyle(color: WHITE, fontSize: 16),
+          style: const TextStyle(color: MyColors.white, fontSize: 16),
         ),
       ),
     );

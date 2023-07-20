@@ -7,6 +7,8 @@ import 'package:todo/widgets/note_list.dart';
 import 'package:uuid/uuid.dart';
 
 class HomeScreen extends HookWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final textEditingController = useTextEditingController();
@@ -16,11 +18,11 @@ class HomeScreen extends HookWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Your Notes'),
+          title: const Text('Your Notes'),
           leading: IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () async {
-              Uuid uuid = Uuid();
+              Uuid uuid = const Uuid();
               String id = uuid.v4();
               await context.read(hiveTodosProvider).openBox(noteId: id);
               Navigator.of(context).push(

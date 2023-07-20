@@ -34,13 +34,6 @@ class NoteList extends HookWidget {
         searchContoller: searchContoller,
       ),
       padding: const EdgeInsets.all(0),
-      children: sortedNotes
-          .map((note) => NoteItem(
-                textEditingController: textEditingController,
-                note: note,
-                key: ValueKey(note.id),
-              ))
-          .toList(),
       onReorder: (oldIndex, newIndex) =>
           context.read(hiveNotesProvider).updateNotes(
                 oldIndex: oldIndex,
@@ -48,6 +41,13 @@ class NoteList extends HookWidget {
                 notes: sortedNotes,
               ),
       scrollController: scrollController,
+      children: sortedNotes
+          .map((note) => NoteItem(
+                textEditingController: textEditingController,
+                note: note,
+                key: ValueKey(note.id),
+              ))
+          .toList(),
     );
   }
 }

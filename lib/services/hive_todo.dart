@@ -92,7 +92,7 @@ class HiveTodo {
   }) {
     try {
       if (todo.title != '' || todo.description != '') {
-        Uuid uuid = Uuid();
+        Uuid uuid = const Uuid();
         if (isNew) {
           todo.id = uuid.v4();
           todo.index = Hive.box<Todo>(noteId).length;

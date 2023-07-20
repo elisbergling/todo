@@ -41,7 +41,7 @@ class NoteItem extends HookWidget {
           borderRadius: BorderRadius.circular(5),
           child: Container(
             decoration: BoxDecoration(
-                color: DARKEST,
+                color: MyColors.darkest,
                 borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(
@@ -58,12 +58,15 @@ class NoteItem extends HookWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Container(
+                      child: SizedBox(
                         width: 250,
                         child: Text(
                           note.title,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: WHITE, fontSize: 20),
+                          style: const TextStyle(
+                            color: MyColors.white,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ),
@@ -74,8 +77,8 @@ class NoteItem extends HookWidget {
                     padding: const EdgeInsets.all(10),
                     child: Text(
                       note.description,
-                      style: TextStyle(
-                        color: WHITE,
+                      style: const TextStyle(
+                        color: MyColors.white,
                         fontSize: 14,
                       ),
                     ),
