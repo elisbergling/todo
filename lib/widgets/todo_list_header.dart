@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/constants/colors.dart';
 import 'package:todo/constants/setting_colors.dart';
@@ -7,23 +6,19 @@ import 'package:todo/constants/todo_filter.dart';
 import 'package:todo/providers/providers.dart';
 import 'package:todo/widgets/filter_button.dart';
 
-class TodoListHeader extends HookWidget {
+class TodoListHeader extends HookConsumerWidget {
   const TodoListHeader({
     super.key,
-    required this.color,
     required this.titleTextEditingContorller,
     required this.descriptionTextEditingContorller,
-    required this.searchContoller,
   });
 
-  final StateController<Color> color;
   final TextEditingController titleTextEditingContorller;
   final TextEditingController descriptionTextEditingContorller;
-  final StateController<String> searchContoller;
 
   @override
-  Widget build(BuildContext context) {
-    final todoFilter = useProvider(todoFilterProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final color = ref.read(colorNoteProvider);
     return Column(
       children: [
         Container(
@@ -33,12 +28,13 @@ class TodoListHeader extends HookWidget {
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) => GestureDetector(
-              onTap: () => color.state = SettingsColors.colors[index],
+              onTap: () => ref.read(colorNoteProvider.notifier).state =
+                  SettingsColors.colors[index],
               child: Container(
                 width: 40,
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  borderRadius: color.state == SettingsColors.colors[index]
+                  borderRadius: color == SettingsColors.colors[index]
                       ? BorderRadius.circular(10)
                       : BorderRadius.circular(4),
                   color: SettingsColors.colors[index],
@@ -57,8 +53,11 @@ class TodoListHeader extends HookWidget {
               color: MyColors.white,
               fontSize: 24,
             ),
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Title',
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: color),
+              ),
             ),
           ),
         ),
@@ -73,8 +72,11 @@ class TodoListHeader extends HookWidget {
               color: MyColors.white,
               fontSize: 16,
             ),
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Description',
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: color),
+              ),
             ),
           ),
         ),
@@ -89,7 +91,8 @@ class TodoListHeader extends HookWidget {
             borderRadius: BorderRadius.circular(5),
           ),
           child: TextField(
-            onChanged: (v) => searchContoller.state = v,
+            onChanged: (v) =>
+                ref.read(todoSearchContollerProvider.notifier).state = v,
             maxLines: 1,
             minLines: 1,
             //cursorColor: RED,
@@ -97,26 +100,28 @@ class TodoListHeader extends HookWidget {
               color: MyColors.white,
               fontSize: 20,
             ),
-            decoration: const InputDecoration(labelText: 'Search'),
+            decoration: InputDecoration(
+              labelText: 'Search',
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: color),
+              ),
+            ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               FilterButton(
-                todoFilter: todoFilter,
                 todoFilterEnum: TodoFilter.all,
                 text: 'All',
               ),
               FilterButton(
-                todoFilter: todoFilter,
                 todoFilterEnum: TodoFilter.notDone,
                 text: 'Active',
               ),
               FilterButton(
-                todoFilter: todoFilter,
                 todoFilterEnum: TodoFilter.done,
                 text: 'Completed',
               ),

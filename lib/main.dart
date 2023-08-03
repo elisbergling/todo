@@ -1,12 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:todo/pages/home_screen.dart';
-import 'package:todo/providers/providers.dart';
 import 'constants/colors.dart';
 import 'constants/strings.dart';
 import 'models/note.dart';
@@ -24,40 +21,32 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends HookWidget {
+class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final settings = useProvider(hiveSettingsProvider);
-    final colorListenable = useValueListenable(
-            settings.getSettings()?.listenable() as ValueListenable)
-        .get(MyStrings.color);
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Todo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         canvasColor: Colors.transparent,
-        appBarTheme: AppBarTheme(
-          color: Color(colorListenable),
+        appBarTheme: const AppBarTheme(
           elevation: 0,
           centerTitle: true,
         ),
-        inputDecorationTheme: InputDecorationTheme(
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color(colorListenable)),
-          ),
-          enabledBorder: const OutlineInputBorder(
+        inputDecorationTheme: const InputDecorationTheme(
+          enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: MyColors.white),
           ),
-          errorBorder: const OutlineInputBorder(
+          errorBorder: OutlineInputBorder(
             borderSide: BorderSide(color: MyColors.error),
           ),
-          focusedErrorBorder: const OutlineInputBorder(
+          focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(color: MyColors.error),
           ),
-          labelStyle: const TextStyle(color: MyColors.white),
-          helperStyle: const TextStyle(color: MyColors.white),
+          labelStyle: TextStyle(color: MyColors.white),
+          helperStyle: TextStyle(color: MyColors.white),
         ),
         scaffoldBackgroundColor: MyColors.darkest,
         visualDensity: VisualDensity.adaptivePlatformDensity,

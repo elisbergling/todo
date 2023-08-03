@@ -10,7 +10,6 @@ class HiveNote {
     try {
       return noteBox;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -29,7 +28,6 @@ class HiveNote {
       newNotes.sort((a, b) => a.index.compareTo(b.index));
       return newNotes;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -56,7 +54,7 @@ class HiveNote {
         }
       }
     } catch (e) {
-      print(e);
+      return;
     }
   }
 
@@ -72,7 +70,7 @@ class HiveNote {
         noteBox.put(note.id, note);
       }
     } catch (e) {
-      print(e);
+      return;
     }
   }
 
@@ -81,7 +79,7 @@ class HiveNote {
       noteBox.delete(id);
       Hive.box<Todo>(id).deleteFromDisk();
     } catch (e) {
-      print(e);
+      return;
     }
   }
 }

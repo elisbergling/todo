@@ -1,52 +1,45 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/constants/colors.dart';
-import 'package:todo/constants/strings.dart';
 import 'package:todo/constants/todo_filter.dart';
 import 'package:todo/providers/providers.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
-class FilterButton extends HookWidget {
+class FilterButton extends HookConsumerWidget {
   const FilterButton({
     super.key,
     required this.text,
-    required this.todoFilter,
     required this.todoFilterEnum,
   });
 
-  final StateController<TodoFilter> todoFilter;
   final String text;
   final TodoFilter todoFilterEnum;
 
-  Color textColorForBorder(int color) {
-    return todoFilter.state == todoFilterEnum ? Color(color) : MyColors.white;
-  }
-
   @override
-  Widget build(BuildContext context) {
-    final settings = useProvider(hiveSettingsProvider);
-    final colorListenable = useValueListenable(
-            settings.getSettings()?.listenable() as ValueListenable)
-        .get(MyStrings.color);
-    return Container(
-      margin: const EdgeInsets.only(top: 15, bottom: 6, left: 10, right: 1),
-      height: 40,
-      decoration: BoxDecoration(
-          color: MyColors.darkest, borderRadius: BorderRadius.circular(5)),
-      child: OutlinedButton(
-        onPressed: () => todoFilter.state = todoFilterEnum,
-        style: ButtonStyle(
-          visualDensity: VisualDensity.standard,
-          side: MaterialStateProperty.all(
-            BorderSide(color: textColorForBorder(colorListenable)),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final todoFilter = ref.watch(todoFilterProvider);
+    final color = ref.watch(colorNoteProvider);
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.only(top: 15, bottom: 6, left: 5, right: 5),
+        height: 40,
+        decoration: BoxDecoration(
+            color: MyColors.darkest, borderRadius: BorderRadius.circular(5)),
+        child: OutlinedButton(
+          onPressed: () =>
+              ref.read(todoFilterProvider.notifier).state = todoFilterEnum,
+          style: ButtonStyle(
+            visualDensity: VisualDensity.standard,
+            side: MaterialStateProperty.all(
+              BorderSide(
+                color: todoFilter == todoFilterEnum ? color : MyColors.white,
+              ),
+            ),
           ),
-        ),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: const TextStyle(color: MyColors.white, fontSize: 16),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: MyColors.white, fontSize: 16),
+          ),
         ),
       ),
     );

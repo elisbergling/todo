@@ -6,7 +6,7 @@ import 'package:todo/pages/add_todo_screen.dart';
 import 'package:todo/providers/providers.dart';
 import 'package:todo/widgets/todo_list.dart';
 
-class AddNoteScreen extends HookWidget {
+class AddNoteScreen extends HookConsumerWidget {
   final Note? note;
   final String? id;
   const AddNoteScreen({
@@ -16,37 +16,45 @@ class AddNoteScreen extends HookWidget {
   });
   bool get isNew => note == null;
   @override
-  Widget build(BuildContext context) {
-    final searchContoller = useProvider(searchContollerProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchContoller = ref.watch(todoSearchContollerProvider.notifier);
     final titleTextEditingContorller =
         useTextEditingController(text: isNew ? '' : note!.title);
     final descriptionTextEditingContorller =
         useTextEditingController(text: isNew ? '' : note!.description);
-    final color = useProvider(colorProvider);
+    final color = ref.watch(colorNoteProvider);
+    final textColor =
+        color.computeLuminance() < 0.5 ? Colors.white : Colors.black;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: color,
           leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: Icon(Icons.arrow_back, color: textColor),
               onPressed: () {
                 Note newNote = Note(
                   title: titleTextEditingContorller.text.trim(),
                   description: descriptionTextEditingContorller.text.trim(),
                   id: isNew ? id! : note!.id,
                   index: isNew ? 0 : note!.index,
-                  color: color.state.value,
+                  color: color.value,
                 );
-                context
+                ref
                     .read(hiveNotesProvider)
                     .makeNote(note: newNote, isNew: isNew);
                 Navigator.of(context).pop();
-                searchContoller.state = '';
+                ref.read(todoSearchContollerProvider.notifier).state = '';
               }),
-          title: const Text('Note'),
+          title: Text(
+            titleTextEditingContorller.value.text,
+            style: TextStyle(
+              color: textColor,
+            ),
+          ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.library_add),
+              icon: Icon(Icons.library_add, color: textColor),
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -59,10 +67,13 @@ class AddNoteScreen extends HookWidget {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.delete),
+              icon: Icon(
+                Icons.delete,
+                color: textColor,
+              ),
               onPressed: () {
                 if (!isNew) {
-                  context.read(hiveNotesProvider).deleteNote(id: note!.id);
+                  ref.read(hiveNotesProvider).deleteNote(id: note!.id);
                 }
                 Navigator.of(context).pop();
               },
@@ -70,11 +81,10 @@ class AddNoteScreen extends HookWidget {
           ],
         ),
         body: TodoList(
-          color: color,
           titleTextEditingContorller: titleTextEditingContorller,
           descriptionTextEditingContorller: descriptionTextEditingContorller,
-          searchContoller: searchContoller,
           id: isNew ? id! : note!.id,
+          searchContoller: searchContoller,
         ),
       ),
     );

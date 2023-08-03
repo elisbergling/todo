@@ -1,39 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/models/note.dart';
 import 'package:todo/pages/add_note_screen.dart';
 import 'package:todo/providers/providers.dart';
 import 'package:todo/constants/colors.dart';
 
-class NoteItem extends HookWidget {
+class NoteItem extends HookConsumerWidget {
   const NoteItem({
     super.key,
     required this.note,
-    required this.textEditingController,
   });
 
   final Note note;
-  final TextEditingController textEditingController;
 
   @override
-  Widget build(BuildContext context) {
-    final color = useProvider(colorProvider);
-    final searchContoller = useProvider(searchContollerProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       key: key,
       onTap: () async {
-        await context.read(hiveTodosProvider).openBox(noteId: note.id);
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => AddNoteScreen(
-              note: note,
+        await ref.read(hiveTodosProvider).openBox(noteId: note.id);
+        ref.read(colorNoteProvider.notifier).state = Color(note.color);
+        if (context.mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => AddNoteScreen(
+                note: note,
+              ),
             ),
-          ),
-        );
-        textEditingController.text = '';
-        searchContoller.state = '';
-        color.state = Color(note.color);
+          );
+        }
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 11),
@@ -59,7 +54,7 @@ class NoteItem extends HookWidget {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: SizedBox(
-                        width: 250,
+                        width: MediaQuery.of(context).size.width - 42,
                         child: Text(
                           note.title,
                           overflow: TextOverflow.ellipsis,

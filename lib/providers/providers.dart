@@ -10,9 +10,14 @@ import 'package:todo/services/hive_todo.dart';
 
 //General
 
-final searchContollerProvider = StateProvider<String>((_) => '');
+final noteSearchContollerProvider = StateProvider<String>((_) => '');
 
-final colorProvider = StateProvider<Color>((ref) =>
+final todoSearchContollerProvider = StateProvider<String>((_) => '');
+
+final colorNoteProvider = StateProvider<Color>((ref) =>
+    Color(ref.watch(hiveSettingsProvider).getColor() ?? MyColors.red.value));
+
+final colorTodoProvider = StateProvider<Color>((ref) =>
     Color(ref.watch(hiveSettingsProvider).getColor() ?? MyColors.red.value));
 
 //Todo
@@ -23,7 +28,7 @@ final todoFilterProvider = StateProvider<TodoFilter>((_) => TodoFilter.all);
 
 final sortedTodosProvider = Provider.family<List<Todo>?, List<Todo>>(
   (ref, todos) => ref.watch(hiveTodosProvider).sortedTodos(
-        searchText: ref.watch(searchContollerProvider).state,
+        searchText: ref.watch(todoSearchContollerProvider),
         todos: todos,
         todoFilter: ref.watch(todoFilterProvider),
       ),
@@ -35,7 +40,7 @@ final hiveNotesProvider = Provider<HiveNote>((ref) => HiveNote());
 
 final sortedNotesProvider = Provider.family<List<Note>?, List<Note>>(
   (ref, notes) => ref.watch(hiveNotesProvider).sortedNotes(
-        searchText: ref.watch(searchContollerProvider).state,
+        searchText: ref.watch(noteSearchContollerProvider),
         notes: notes,
       ),
 );

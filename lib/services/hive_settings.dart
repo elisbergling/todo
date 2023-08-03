@@ -12,7 +12,6 @@ class HiveSettings {
       }
       return settingsBox;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -21,7 +20,6 @@ class HiveSettings {
     try {
       return settingsBox.get(MyStrings.color) ?? MyColors.red.value;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -30,7 +28,7 @@ class HiveSettings {
     try {
       settingsBox.put(MyStrings.color, color);
     } catch (e) {
-      print(e);
+      return;
     }
   }
 }

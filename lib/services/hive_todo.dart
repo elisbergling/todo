@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/constants/todo_filter.dart';
 import 'package:todo/models/todo.dart';
 import 'package:uuid/uuid.dart';
@@ -9,7 +8,7 @@ class HiveTodo {
     try {
       await Hive.openBox<Todo>(noteId);
     } catch (e) {
-      print(e);
+      return;
     }
   }
 
@@ -17,7 +16,7 @@ class HiveTodo {
     try {
       await Hive.box(noteId).close();
     } catch (e) {
-      print(e);
+      return;
     }
   }
 
@@ -25,15 +24,14 @@ class HiveTodo {
     try {
       return Hive.box<Todo>(noteId);
     } catch (e) {
-      print(e);
       return null;
     }
   }
 
   List<Todo>? sortedTodos({
-    required List<Todo> todos,
-    required StateController<TodoFilter> todoFilter,
+    required TodoFilter todoFilter,
     required String searchText,
+    required List<Todo> todos,
   }) {
     try {
       String lowerText = searchText.toLowerCase();
@@ -43,17 +41,15 @@ class HiveTodo {
               e.title.toLowerCase().contains(lowerText))
           .toList();
       newTodos.sort((a, b) => a.index.compareTo(b.index));
-      switch (todoFilter.state) {
+      switch (todoFilter) {
         case TodoFilter.done:
           return newTodos.where((todo) => todo.isDone).toList();
         case TodoFilter.notDone:
           return newTodos.where((todo) => !todo.isDone).toList();
         case TodoFilter.all:
-        default:
           return newTodos;
       }
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -81,7 +77,7 @@ class HiveTodo {
         }
       }
     } catch (e) {
-      print(e);
+      return;
     }
   }
 
@@ -100,7 +96,7 @@ class HiveTodo {
         Hive.box<Todo>(noteId).put(todo.id, todo);
       }
     } catch (e) {
-      print(e);
+      return;
     }
   }
 
@@ -111,7 +107,7 @@ class HiveTodo {
     try {
       Hive.box<Todo>(noteId).delete(id);
     } catch (e) {
-      print(e);
+      return;
     }
   }
 
@@ -123,7 +119,7 @@ class HiveTodo {
       todo.isDone = !todo.isDone;
       Hive.box<Todo>(noteId).put(todo.id, todo);
     } catch (e) {
-      print(e);
+      return;
     }
   }
 }

@@ -8,19 +8,12 @@ import 'package:todo/constants/strings.dart';
 import 'package:todo/providers/providers.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class NoteListHeader extends HookWidget {
-  const NoteListHeader({
-    super.key,
-    required this.textEditingController,
-    required this.searchContoller,
-  });
-
-  final TextEditingController textEditingController;
-  final StateController<String> searchContoller;
+class NoteListHeader extends HookConsumerWidget {
+  const NoteListHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final settings = useProvider(hiveSettingsProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(hiveSettingsProvider);
     final colorListenable = useValueListenable(
             settings.getSettings()?.listenable() as ValueListenable)
         .get(MyStrings.color);
@@ -33,7 +26,7 @@ class NoteListHeader extends HookWidget {
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) => GestureDetector(
-              onTap: () => context.read(hiveSettingsProvider).makeSettings(
+              onTap: () => ref.read(hiveSettingsProvider).makeSettings(
                     SettingsColors.colors[index].value,
                   ),
               child: Container(
@@ -58,8 +51,8 @@ class NoteListHeader extends HookWidget {
             borderRadius: BorderRadius.circular(5),
           ),
           child: TextField(
-            controller: textEditingController,
-            onChanged: (v) => searchContoller.state = v,
+            onChanged: (v) =>
+                ref.read(noteSearchContollerProvider.notifier).state = v,
             maxLines: 1,
             minLines: 1,
             cursorColor: MyColors.red,
@@ -67,7 +60,12 @@ class NoteListHeader extends HookWidget {
               color: MyColors.white,
               fontSize: 20,
             ),
-            decoration: const InputDecoration(labelText: 'Search'),
+            decoration: InputDecoration(
+              labelText: 'Search',
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Color(colorListenable)),
+              ),
+            ),
           ),
         ),
       ],

@@ -6,7 +6,7 @@ import 'package:todo/constants/setting_colors.dart';
 import 'package:todo/models/todo.dart';
 import 'package:todo/providers/providers.dart';
 
-class AddTodoScreen extends HookWidget {
+class AddTodoScreen extends HookConsumerWidget {
   final Todo? todo;
   final String noteId;
   const AddTodoScreen({
@@ -17,18 +17,21 @@ class AddTodoScreen extends HookWidget {
 
   bool get isNew => todo == null;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final titleTextEditingContorller =
         useTextEditingController(text: isNew ? '' : todo!.title);
     final descriptionTextEditingContorller =
         useTextEditingController(text: isNew ? '' : todo!.description);
-    final color = useProvider(colorProvider);
+    final color = ref.watch(colorTodoProvider);
+    final textColor =
+        color.computeLuminance() < 0.5 ? Colors.white : Colors.black;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: color,
           leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: Icon(Icons.arrow_back, color: textColor),
               onPressed: () {
                 Todo newTodo = Todo(
                   title: titleTextEditingContorller.text.trim(),
@@ -36,20 +39,23 @@ class AddTodoScreen extends HookWidget {
                   isDone: isNew ? false : todo!.isDone,
                   id: isNew ? '' : todo!.id,
                   index: isNew ? 0 : todo!.index,
-                  color: color.state.value,
+                  color: color.value,
                 );
-                context
+                ref
                     .read(hiveTodosProvider)
                     .makeTodo(noteId: noteId, todo: newTodo, isNew: isNew);
                 Navigator.of(context).pop();
               }),
-          title: const Text('Todo'),
+          title: Text(
+            titleTextEditingContorller.value.text,
+            style: TextStyle(color: textColor),
+          ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.delete),
+              icon: Icon(Icons.delete, color: textColor),
               onPressed: () {
                 if (!isNew) {
-                  context
+                  ref
                       .read(hiveTodosProvider)
                       .deleteTodo(noteId: noteId, id: todo!.id);
                 }
@@ -68,15 +74,15 @@ class AddTodoScreen extends HookWidget {
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) => GestureDetector(
-                    onTap: () => color.state = SettingsColors.colors[index],
+                    onTap: () => ref.read(colorTodoProvider.notifier).state =
+                        SettingsColors.colors[index],
                     child: Container(
                       width: 40,
                       margin: const EdgeInsets.symmetric(horizontal: 8),
                       decoration: BoxDecoration(
-                        borderRadius:
-                            color.state == SettingsColors.colors[index]
-                                ? BorderRadius.circular(10)
-                                : BorderRadius.circular(4),
+                        borderRadius: color == SettingsColors.colors[index]
+                            ? BorderRadius.circular(10)
+                            : BorderRadius.circular(4),
                         color: SettingsColors.colors[index],
                       ),
                     ),
@@ -93,8 +99,11 @@ class AddTodoScreen extends HookWidget {
                     color: MyColors.white,
                     fontSize: 24,
                   ),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Title',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: color),
+                    ),
                   ),
                 ),
               ),
@@ -109,8 +118,11 @@ class AddTodoScreen extends HookWidget {
                     color: MyColors.white,
                     fontSize: 16,
                   ),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Description',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: color),
+                    ),
                   ),
                 ),
               ),

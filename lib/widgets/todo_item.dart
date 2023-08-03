@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/models/todo.dart';
 import 'package:todo/pages/add_todo_screen.dart';
 import 'package:todo/providers/providers.dart';
 import 'package:todo/constants/colors.dart';
 
-class TodoItem extends HookWidget {
+class TodoItem extends HookConsumerWidget {
   const TodoItem({
     super.key,
     required this.noteId,
@@ -17,11 +16,11 @@ class TodoItem extends HookWidget {
   final String noteId;
 
   @override
-  Widget build(BuildContext context) {
-    final color = useProvider(colorProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       key: key,
       onTap: () {
+        ref.read(colorTodoProvider.notifier).state = Color(todo.color);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => AddTodoScreen(
@@ -30,7 +29,6 @@ class TodoItem extends HookWidget {
             ),
           ),
         );
-        color.state = Color(todo.color);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 11),
@@ -57,8 +55,9 @@ class TodoItem extends HookWidget {
                       materialTapTargetSize: MaterialTapTargetSize.padded,
                       checkColor: MyColors.darkest,
                       activeColor: Color(todo.color),
+                      fillColor: MaterialStateProperty.all(Color(todo.color)),
                       value: todo.isDone,
-                      onChanged: (_) => context
+                      onChanged: (_) => ref
                           .read(hiveTodosProvider)
                           .toogleIsDoneTodo(noteId: noteId, todo: todo),
                     ),
